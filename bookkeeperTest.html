@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookkeeper Procedure Practice Test</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --accent: #3498db;
+            --success: #27ae60;
+            --error: #c0392b;
+            --bg: #f4f7f6;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .intro {
+            background-color: #e8f4fd;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin-bottom: 25px;
+            border-left: 5px solid var(--accent);
+        }
+
+        .question-card {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .question-text {
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        label {
+            display: flex;
+            align-items: flex-start;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        label:hover {
+            background-color: #f9f9f9;
+        }
+
+        input[type="radio"], input[type="checkbox"] {
+            margin-right: 12px;
+            margin-top: 5px;
+            transform: scale(1.2);
+        }
+
+        /* Feedback Styles */
+        .correct-answer {
+            background-color: rgba(39, 174, 96, 0.1);
+            border-color: var(--success);
+            color: var(--success);
+            font-weight: bold;
+        }
+
+        .wrong-answer {
+            background-color: rgba(192, 57, 43, 0.1);
+            border-color: var(--error);
+        }
+
+        .feedback-msg {
+            font-size: 0.9rem;
+            margin-top: 5px;
+            font-weight: bold;
+        }
+        
+        .feedback-msg.correct { color: var(--success); }
+        .feedback-msg.incorrect { color: var(--error); }
+
+        button#submit-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        button#submit-btn:hover {
+            background-color: #2980b9;
+        }
+
+        #score-display {
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-top: 20px;
+            padding: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Bookkeeper Procedure Test</h1>
+    
+    <div class="intro">
+        <strong>Instructions:</strong><br>
+        • Passing score is 90% (miss no more than 5).<br>
+        • Select the best answer for each question.<br>
+        • For "Select all that apply", check all correct boxes.
+    </div>
+
+    <form id="quiz-form">
+        </form>
+
+    <button id="submit-btn" onclick="gradeQuiz()">Submit Answers</button>
+    <div id="score-display"></div>
+</div>
+
+<script>
+    // DATA: Questions 1-16 (Page 1) Transcribed
+    const quizData = [
+        {
+            id: 1,
+            text: "1. It is acceptable to leave the cash office unattended without the money being secured in the safe.",
+            type: "tf",
+            options: ["True", "False"],
+            answer: "False"
+        },
+        {
+            id: 2,
+            text: "2. You are allowed to open the cash office door only after you have positively identified the person through the peephole.",
+            type: "tf",
+            options: ["True", "False"],
+            answer: "True"
+        },
+        {
+            id: 3,
+            text: "3. You are allowed to keep extra monies in the store to balance registers, fund parties, buy supplies, etc.",
+            type: "tf",
+            options: ["True", "False"],
+            answer: "False"
+        },
+        {
+            id: 4,
+            text: "4. It is necessary to have the cash office door deadbolted at all times, even before the store opens and after the store closes.",
+            type: "tf",
+            options: ["True", "False"],
+            answer: "True"
+        },
+        {
+            id: 5,
+            text: "5. A terminal open and a terminal close is required on each register every day even if money is not put into the register that day.",
+            type: "tf",
+            options: ["True", "False"],
+            answer: "True"
+        },
+        {
+            id: 6,
+            text: "6. Personal items such as purses, backpacks, bags, etc., are not permitted in the cash office.",
+            type: "tf",
+            options: ["True", "False"],
+            answer: "True"
+        },
+        {
+            id: 7,
+            text: "7. Unpaid merchandise is allowed to be stored in the cash office.",
+            type: "tf",
+            options: ["True", "False"],
+            answer: "False"
+        },
+        {
+            id: 8,
+            text: "8. Which position is not authorized to have a key to the cash office or the combination to the safe?",
+            type: "mc",
+            options: ["a. Primary bookkeeper", "b. Assistant manager", "c. Backup bookkeeper"],
+            answer: "c. Backup bookkeeper"
+        },
+        {
+            id: 9,
+            text: "9. When the bookkeeper arrives in the office, the first step that must be completed before processing daily cash is for the bookkeeper and a senior member of management to verify the safe.",
+            type: "tf",
+            options: ["True", "False"],
+            answer: "True"
+        },
+        {
+            id: 10,
+            text: "10. Register bags must only be created for registers in daily use (e.g., if register #7 is not used on a daily basis, those funds would be placed back into the working fund).",
+            type: "tf",
+            options: ["True", "False"],
+            answer: "True"
+        },
+        {
+            id: 11,
+            text: "11. The bookkeeper is allowed to post the totals in the 'Daily Cash' application before a senior member of management verifies all totals.",
+            type: "tf",
+            options: ["True", "False"],
+            answer: "False"
+        },
+        {
+            id: 12,
+            text: "12. The bookkeeper must count all register bags at the cash office desk keeping all monies within camera view.",
+            type: "tf",
+            options: ["True", "False"],
+            answer: "True"
+        },
+        {
+            id: 13,
+            text: "13. An assistant manager is only permitted to verify the safe if a senior member of management is not present in the store.",
+            type: "tf",
+            options: ["True", "False"],
+            answer: "True"
+        },
+        {
+            id: 14,
+            text: "14. A member of management is not required to count the change drawer before securing it in the cash office safe each evening.",
+            type: "tf",
+            options: ["True", "False"],
+            answer: "False"
+        },
+        {
+            id: 15,
+            text: "15. When completing Daily Cash, which date must be recorded on the deposit slip(s), deposit bag(s), and calculator tapes?",
+            type: "mc",
+            options: [
+                "a. The date the deposit is being completed.",
+                "b. The business date which is the date listed in the 'Sales Date' field of the 'Daily Cash' application.",
+                "c. The Company's incorporation date."
+            ],
+            answer: "b. The business date which is the date listed in the 'Sales Date' field of the 'Daily Cash' application."
+        },
+        {
+            id: 16,
+            text: "16. When verifying the safe, what must the bookkeeper and a senior member of management physically count? (Select all that apply)",
+            type: "multi",
+            options: [
+                "a. Bundled and loose bills – Bundled bills are not required to be opened",
+                "b. Rolled and loose coins",
+                "c. Lost and Found money",
+                "d. Change drawer",
+                "e. Register bags",
+                "f. Estimated Cash Advanced Expense Reports",
+                "g. All of the above"
+            ],
+            answer: ["a. Bundled and loose bills – Bundled bills are not required to be opened", "b. Rolled and loose coins", "f. Estimated Cash Advanced Expense Reports"]
+        },
+        {
+            id: 17,
+            text: "17. If a register has a discrepancy $5.00 or more, a senior member of management must be notified to assist with locating that discrepancy before the money from that register can be placed with the daily deposit.",
+            type: "tf",
+            options: ["True", "False"],
+            answer: "True"
+        },
+        {
+            id: 18,
+            text: "18. A senior member of management or a bookkeeper must submit an LPMS report via Verde for cash shortages totaling ____ or more.",
+            type: "mc",
+            options: ["a. $50.00", "b. $90.00", "c. $100.00"],
+            answer: "b. $90.00"
+        },
+        {
+            id: 19,
+            text: "19. If register #2 is short $10.00 and register #3 is over $10.00, what must happen?",
+            type: "mc",
+            options: [
+                "a. Move the overage from register #3 to cover the shortage of register #2.",
+                "b. Call Audit.",
+                "c. Leave register #2 short $10.00 and register #3 over $10.00.",
+                "d. Use the petty cash to balance the register bags."
+            ],
+            answer: "c. Leave register #2 short $10.00 and register #3 over $10.00."
+        },
+        {
+            id: 20,
+            text: "20. If a reason cannot be found for an overage/shortage, what must happen?",
+            type: "mc",
+            options: [
+                "a. Use money from an overage in the past to cover a shortage.",
+                "b. The overage/shortage will remain in that register in Daily Cash with an explanation noted.",
+                "c. Place money from an overage into a fund to cover shortages at a later time."
+            ],
+            answer: "b. The overage/shortage will remain in that register in Daily Cash with an explanation noted."
+        },
+        {
+            id: 21,
+            text: "21. If the bookkeeper does not have his/her own username and password to log into 'Daily Cash' it is acceptable for the bookkeeper to use a member of management's username and password.",
+            type: "tf",
+            options: ["True", "False"],
+            answer: "False"
+        },
+        {
+            id: 22,
+            text: "22. What are the correct procedures for verifying any incoming change order?",
+            type: "mc",
+            options: [
+                "a. Only the bookkeeper is required to verify the change order...",
+                "b. The bookkeeper and a senior member of management... must verify the change order... Bundled money is not required to be opened...",
+                "c. The bookkeeper and a senior member of management... must each count the change order... Bundled money must be opened and counted while verifying.",
+                "d. Incoming change orders are not required to be verified."
+            ],
+            answer: "c. The bookkeeper and a senior member of management... must each count the change order... Bundled money must be opened and counted while verifying."
+        },
+        {
+            id: 23,
+            text: "23. What must be done if the change drawer is short when it is returned to its original setup in the morning?",
+            type: "mc",
+            options: [
+                "a. The shortage must be funded from Register #1...",
+                "b. The shortage must be left short until all register bags have been counted...",
+                "c. The shortage must be funded from the safe until all the register bags have been counted to determine if there is a register over that amount..."
+            ],
+            answer: "c. The shortage must be funded from the safe until all the register bags have been counted to determine if there is a register over that amount..."
+        },
+        {
+            id: 24,
+            text: "24. All paid out/in slips and related receipts must be scanned to 'Store Scan – Paid Out-In' the following business day.",
+            type: "tf",
+            options: ["True", "False"],
+            answer: "True"
+        },
+        {
+            id: 25,
+            text: "25. How often must all completed tax-exempt forms, with any supporting documentation (if applicable), be scanned and e-mailed to 'Store Scan – Tax Exempt'?",
+            type: "mc",
+            options: [
+                "a. Every Monday (for the previous week)",
+                "b. Every Tuesday (for the previous week)",
+                "c. Every Saturday",
+                "d. Daily"
+            ],
+            answer: "a. Every Monday (for the previous week)"
+        },
+        {
+            id: 26,
+            text: "26. When e-mailing a scanned document(s) to corporate, which of the following must be done? (Circle all that apply)",
+            type: "multi",
+            options: [
+                "a. Attach the document(s) to the email.",
+                "b. Open the attachment(s) from the email to ensure it is the correct attachment.",
+                "c. Ensure the document(s) was properly scanned and right side up.",
+                "d. Ensure the document(s) is being sent to the proper department.",
+                "e. All of the above."
+            ],
+            answer: ["e. All of the above."]
+        },
+        {
+            id: 27,
+            text: "27. The 'Pattern Order' application automatically creates and transmits orders for Simplicity patterns; bookkeepers are no longer required to create a pattern order.",
+            type: "tf",
+            options: ["True", "False"],
+            answer: "False"
+        },
+        {
+            id: 28,
+            text: "28. After thirty (30) days, the district manager must be contacted to determine how to handle any 'lost and found' item(s).",
+            type: "tf",
+            options: ["True", "False"],
+            answer: "True"
+        },
+        {
+            id: 29,
+            text: "29. Any unclaimed 'lost and found' Company-issued gift/exchange card(s) with a balance, must be redeemed by Audit.",
+            type: "tf",
+            options: ["True", "False"],
+            answer: "True"
+        },
+        {
+            id: 30,
+            text: "30. What information must be attached to every lost and found item/money?",
+            type: "mc",
+            options: [
+                "a. Date and time, if known, the item/money was found",
+                "b. Where the item/money was found",
+                "c. The name of the person who found the item/money...",
+                "d. If the customer was contacted and when",
+                "e. All of the above"
+            ],
+            answer: "e. All of the above"
+        },
+        {
+            id: 31,
+            text: "31. Which of the following items in 'Lost and Found' require an LPMS report? (Circle all that apply)",
+            type: "multi",
+            options: [
+                "a. Item(s), money, or gift cards valued at $50.00 or more",
+                "b. Car key(s) with 'chip' technology",
+                "c. Cell phone(s)",
+                "d. Credit/Debit card(s)",
+                "e. Government-issued identification card(s)",
+                "f. All of the above"
+            ],
+            answer: ["f. All of the above"]
+        },
+        {
+            id: 32,
+            text: "32. How many days must 'lost and found' money be kept until the customer or employee who found the money is contacted and given an opportunity to claim the money?",
+            type: "mc",
+            options: [
+                "a. 14 days",
+                "b. 30 days",
+                "c. 90 days"
+            ],
+            answer: "c. 90 days"
+        },
+        {
+            id: 33,
+            text: "33. What is the procedure for unclaimed lost and found monies after all retention periods have passed?",
+            type: "mc",
+            options: [
+                "a. Give the money to the manager",
+                "b. Add the money to the main refund register and, if over $10.00, notify Audit after daily cash for the day has been completed",
+                "c. Send the money to the Audit Department"
+            ],
+            answer: "b. Add the money to the main refund register and, if over $10.00, notify Audit after daily cash for the day has been completed"
+        },
+        {
+            id: 34,
+            text: "34. The bookkeeper or a member of management is responsible for ordering all 'Rain Check/Special Orders' ensuring the merchandise is pulled on freight day, calling each customer, and following up.",
+            type: "tf",
+            options: ["True", "False"],
+            answer: "True"
+        },
+        {
+            id: 35,
+            text: "35. How long are 'Rain Check/Special Orders' held for customers?",
+            type: "mc",
+            options: [
+                "a. One (1) week from the date the product is received",
+                "b. Three (3) weeks from the date the customer is first called",
+                "c. Thirty (30) days from the date the customer is first called",
+                "d. Thirty (30) days from the date the product is ordered"
+            ],
+            answer: "c. Thirty (30) days from the date the customer is first called"
+        },
+        {
+            id: 36,
+            text: "36. Invoices waiting to be signed by a senior member of management must be filed:",
+            type: "mc",
+            options: [
+                "a. In 'Drawer A: Open Invoices and Packing Slips' under 'Pending Weekly Invoices'",
+                "b. In 'Drawer B: Processed Invoices – Current Year'",
+                "c. In 'Drawer A: Open Invoices and Packing Slips' alphabetically",
+                "d. In a file tray in the cash office"
+            ],
+            answer: "a. In 'Drawer A: Open Invoices and Packing Slips' under 'Pending Weekly Invoices'"
+        },
+        {
+            id: 37,
+            text: "37. A senior member of management must approve all invoices, credits, charges, and statements for payment by dating and legibly signing the document with his/her first initial and last name.",
+            type: "tf",
+            options: ["True", "False"],
+            answer: "True"
+        },
+        {
+            id: 38,
+            text: "38. All invoices and tax-exempt forms/supporting documents being scanned and e-mailed to Corporate must have the scan date written in what color ink?",
+            type: "mc",
+            options: ["a. Black", "b. Blue", "c. Red"],
+            answer: "c. Red"
+        },
+        {
+            id: 39,
+            text: "39. Each completed ITQ must be emailed to 'Store Scan – ITQ' and the district manager's office and filed in the general ledger binder.",
+            type: "tf",
+            options: ["True", "False"],
+            answer: "True"
+        },
+        {
+            id: 40,
+            text: "40. How long do you have to complete the general ledger?",
+            type: "mc",
+            options: [
+                "a. By the end of each week",
+                "b. Within two (2) weeks of receipt",
+                "c. By the end of the month"
+            ],
+            answer: "b. Within two (2) weeks of receipt"
+        },
+        {
+            id: 41,
+            text: "41. Once the general ledger is completed, the final step prior to writing up the ITQ would be:",
+            type: "mc",
+            options: [
+                "a. To sign each page of the general ledger",
+                "b. To clip the page on the bottom left hand corner...",
+                "c. To clip the page on the bottom right hand corner of each 100% completed page"
+            ],
+            answer: "c. To clip the page on the bottom right hand corner of each 100% completed page"
+        },
+        {
+            id: 42,
+            text: "42. What items are required to be filed in the general ledger envelope from Drawer B and Drawer C? (Select all that apply)",
+            type: "multi",
+            options: [
+                "a. Processed Expense Reports",
+                "b. Electronic Vendor MTRs with supporting documents",
+                "c. SNL (Short/Long) Reconciliation Report with supporting documents",
+                "d. Warehouse Invoice Total Sheets",
+                "e. Warehouse Shiplists",
+                "f. MTR Reconciliation Report with supporting documents"
+            ],
+            answer: [
+                "c. SNL (Short/Long) Reconciliation Report with supporting documents",
+                "d. Warehouse Invoice Total Sheets",
+                "f. MTR Reconciliation Report with supporting documents"
+            ]
+        },
+        {
+            id: 43,
+            text: "43. [Smart Safe] After buying back into the safe as many loose coins as possible from the deposit, where must the remaining coin totaling less than $1.00 be placed?",
+            type: "mc",
+            options: ["a. The petty cash box", "b. The main register bag", "c. The safe floor"],
+            answer: "b. The main register bag"
+        },
+        {
+            id: 44,
+            text: "44. [Smart Safe] Each bookkeeper and member of management must only log into the 'Smart Safe' using his/her user number and six (6) digit PIN.",
+            type: "tf",
+            options: ["True", "False"],
+            answer: "False"
+        },
+        {
+            id: 45,
+            text: "45. [Smart Safe] The 'Bill Acceptor Receipt' must be attached to the applicable 'Daily Cash Worksheet' after the amounts are verified.",
+            type: "tf",
+            options: ["True", "False"],
+            answer: "False"
+        },
+        {
+            id: 46,
+            text: "46. [Smart Safe] The bookkeeper or member of management must attach the 'Courier Pick-up Report' to the previous business day's 'Daily Cash Worksheet.'",
+            type: "tf",
+            options: ["True", "False"],
+            answer: "True"
+        },
+        {
+            id: 47,
+            text: "47. [Smart Safe] A bookkeeper or a member of management must ensure the armored car employee signs the 'Courier Pick-up' report and accurately records the number of envelopes in the 'Envelope Count' field.",
+            type: "tf",
+            options: ["True", "False"],
+            answer: "True"
+        },
+        {
+            id: 48,
+            text: "48. [Smart Safe] The armored car employee must sign the 'Currency Exchange Confirmation Receipt.'",
+            type: "tf",
+            options: ["True", "False"],
+            answer: "False"
+        },
+        {
+            id: 49,
+            text: "49. [Smart Safe] It is acceptable to wait to attach the 'Currency Exchange Confirmation Receipt' to the applicable 'Daily Cash Worksheet' until after the associated change order has been delivered.",
+            type: "tf",
+            options: ["True", "False"],
+            answer: "False"
+        },
+        {
+            id: 50,
+            text: "50. [Smart Safe] Counterfeit currency, damaged bills, and/or coins (e.g., half or whole dollar coins) must be placed in an envelope or 5x7 resealable zip lock bag, not in a deposit bag.",
+            type: "tf",
+            options: ["True", "False"],
+            answer: "True"
+        }
+    ];
+
+    const form = document.getElementById('quiz-form');
+
+    // RENDER FUNCTION
+    function renderQuiz() {
+        quizData.forEach((q, index) => {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+            
+            const title = document.createElement('span');
+            title.className = 'question-text';
+            title.textContent = q.text;
+            card.appendChild(title);
+
+            q.options.forEach((opt, optIndex) => {
+                const label = document.createElement('label');
+                const input = document.createElement('input');
+                
+                if (q.type === 'multi') {
+                    input.type = 'checkbox';
+                    input.name = `q${q.id}`;
+                    input.value = opt;
+                } else {
+                    input.type = 'radio';
+                    input.name = `q${q.id}`;
+                    input.value = opt;
+                }
+
+                label.appendChild(input);
+                label.appendChild(document.createTextNode(opt));
+                card.appendChild(label);
+            });
+
+            // Container for feedback message
+            const feedback = document.createElement('div');
+            feedback.id = `feedback-${q.id}`;
+            feedback.className = 'feedback-msg';
+            card.appendChild(feedback);
+
+            form.appendChild(card);
+        });
+    }
+
+    // GRADING FUNCTION
+    function gradeQuiz() {
+        let score = 0;
+        let total = quizData.length;
+
+        quizData.forEach(q => {
+            const feedbackEl = document.getElementById(`feedback-${q.id}`);
+            const inputs = document.querySelectorAll(`input[name="q${q.id}"]`);
+            let userCorrect = false;
+
+            // Reset styles
+            inputs.forEach(inp => {
+                inp.parentElement.classList.remove('correct-answer', 'wrong-answer');
+            });
+
+            if (q.type === 'multi') {
+                // Handle Checkboxes
+                const userSelected = Array.from(document.querySelectorAll(`input[name="q${q.id}"]:checked`)).map(i => i.value);
+                // Check if lengths match and every selected item is in the answer array
+                const isMatch = userSelected.length === q.answer.length && 
+                                userSelected.every(val => q.answer.includes(val));
+                
+                if (isMatch) userCorrect = true;
+
+                // Visual Feedback for Multi
+                inputs.forEach(inp => {
+                    if (q.answer.includes(inp.value)) {
+                        inp.parentElement.classList.add('correct-answer'); // Highlight correct options
+                    } else if (inp.checked) {
+                        inp.parentElement.classList.add('wrong-answer'); // Highlight wrong selections
+                    }
+                });
+
+            } else {
+                // Handle Radio Buttons
+                const selected = document.querySelector(`input[name="q${q.id}"]:checked`);
+                if (selected && selected.value === q.answer) {
+                    userCorrect = true;
+                }
+
+                // Visual Feedback for Radio
+                inputs.forEach(inp => {
+                    if (inp.value === q.answer) {
+                        inp.parentElement.classList.add('correct-answer');
+                    } else if (inp.checked && inp.value !== q.answer) {
+                        inp.parentElement.classList.add('wrong-answer');
+                    }
+                });
+            }
+
+            if (userCorrect) {
+                score++;
+                feedbackEl.textContent = "Correct!";
+                feedbackEl.className = "feedback-msg correct";
+            } else {
+                feedbackEl.textContent = `Incorrect.`; 
+                feedbackEl.className = "feedback-msg incorrect";
+            }
+        });
+
+        // Show Score
+        const scoreDisplay = document.getElementById('score-display');
+        const percentage = Math.round((score / total) * 100);
+        scoreDisplay.style.display = 'block';
+        scoreDisplay.innerHTML = `You scored ${score}/${total} (${percentage}%)<br>`;
+        
+        if(percentage >= 90) {
+            scoreDisplay.innerHTML += `<span style="color:var(--success)">PASSED</span>`;
+        } else {
+            scoreDisplay.innerHTML += `<span style="color:var(--error)">RETAIN & RETRAIN</span>`;
+        }
+        
+        // Scroll to bottom
+        scoreDisplay.scrollIntoView({behavior: "smooth"});
+    }
+
+    // Initialize
+    renderQuiz();
+</script>
+
+</body>
+</html>
