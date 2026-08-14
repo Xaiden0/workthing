@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frame Shop Certification Test - Section 3</title>
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --primary-hover: #1d4ed8;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #0f172a;
+            --border: #e2e8f0;
+            --success: #16a34a;
+            --error: #dc2626;
+            --success-bg: #f0fdf4;
+            --error-bg: #fef2f2;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 24px;
+            border: 1px solid var(--border);
+        }
+
+        h1 {
+            margin: 0 0 12px 0;
+            color: var(--primary);
+            font-size: 1.8rem;
+        }
+
+        .instructions {
+            font-size: 0.95rem;
+            color: #475569;
+            background: #f1f5f9;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .section {
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 24px;
+            border: 1px solid var(--border);
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 8px;
+            margin-bottom: 20px;
+        }
+
+        .question-card {
+            margin-bottom: 20px;
+            padding: 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .question-text {
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .diagram-container {
+            margin: 16px 0;
+            padding: 16px;
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            overflow-x: auto;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.15s ease;
+        }
+
+        .option-label:hover {
+            background-color: #f8fafc;
+        }
+
+        .option-label input {
+            margin-right: 12px;
+        }
+
+        .question-card.correct {
+            border-color: var(--success);
+            background-color: var(--success-bg);
+        }
+
+        .question-card.incorrect {
+            border-color: var(--error);
+            background-color: var(--error-bg);
+        }
+
+        .feedback {
+            margin-top: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .correct .feedback {
+            display: block;
+            color: var(--success);
+        }
+
+        .incorrect .feedback {
+            display: block;
+            color: var(--error);
+        }
+
+        .controls {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        button.reset-btn {
+            background-color: #64748b;
+        }
+
+        button.reset-btn:hover {
+            background-color: #475569;
+        }
+
+        #score-board {
+            display: none;
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px solid var(--primary);
+            margin-top: 24px;
+            text-align: center;
+        }
+
+        #score-board h2 {
+            margin: 0 0 8px 0;
+        }
+
+        .pass-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-weight: bold;
+            color: white;
+            margin-top: 8px;
+        }
+
+        .pass { background-color: var(--success); }
+        .fail { background-color: var(--error); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Section 3: For Framers & Managers ONLY</h1>
+        <div class="instructions">
+            <strong>Frame Shop Manual Pages 25–36</strong><br>
+            Cross-Trained Employees should not take this test. Select the best answer for each question. Your progress is saved automatically. A score of <strong>90/100 (90%)</strong> or higher is required to pass.
+        </div>
+    </header>
+
+    <form id="quiz-form">
+        <div class="section">
+            <div class="section-title">Questions 1–100</div>
+            <div id="mc-container"></div>
+        </div>
+
+        <div class="controls">
+            <button type="button" onclick="gradeQuiz()">Submit & Grade</button>
+            <button type="button" class="reset-btn" onclick="resetQuiz()">Reset Test</button>
+        </div>
+    </form>
+
+    <div id="score-board">
+        <h2 id="score-text">Your Score: 0 / 100</h2>
+        <div id="score-percentage" style="font-size: 1.2rem; margin-bottom: 8px;">0%</div>
+        <div id="pass-status" class="pass-badge">STATUS</div>
+    </div>
+</div>
+
+<script>
+    const STORAGE_KEY = 'frameShopSection3Answers';
+
+    const canvasDiagram1 = `
+        <svg viewBox="0 0 520 200" width="100%" height="200" xmlns="http://www.w3.org/2000/svg">
+            <rect x="10" y="10" width="340" height="180" fill="#f1f5f9" stroke="#334155" stroke-width="2"/>
+            <rect x="35" y="30" width="290" height="140" fill="#64748b" stroke="#1e293b" stroke-width="1.5"/>
+            <!-- Outer dimensions -->
+            <line x1="10" y1="195" x2="350" y2="195" stroke="#0f172a" stroke-width="1.5"/>
+            <text x="180" y="192" font-family="sans-serif" font-size="11" font-weight="bold" text-anchor="middle">43.5″</text>
+            <line x1="355" y1="10" x2="355" y2="190" stroke="#0f172a" stroke-width="1.5"/>
+            <text x="358" y="105" font-family="sans-serif" font-size="11" font-weight="bold" text-anchor="start">29.5″</text>
+            <!-- Painted dimensions -->
+            <text x="180" y="162" font-family="sans-serif" font-size="11" font-weight="bold" text-anchor="middle" fill="#ffffff">37.5″</text>
+            <text x="315" y="105" font-family="sans-serif" font-size="11" font-weight="bold" text-anchor="end" fill="#ffffff">23.5″</text>
+            <!-- Border label -->
+            <text x="22" y="105" font-family="sans-serif" font-size="10" font-weight="bold" text-anchor="middle">3″</text>
+            <!-- Spec Box -->
+            <g transform="translate(380, 20)">
+                <rect x="0" y="0" width="130" height="140" fill="#ffffff" stroke="#1e3a8a" stroke-width="2" rx="6"/>
+                <text x="65" y="25" font-family="sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#1e3a8a">13-1305</text>
+                <text x="65" y="50" font-family="sans-serif" font-size="11" font-weight="bold" text-anchor="middle">Height: 2″</text>
+                <text x="65" y="75" font-family="sans-serif" font-size="10" font-weight="bold" text-anchor="middle" fill="#0f172a">Ordering Instructions:</text>
+                <text x="65" y="92" font-family="sans-serif" font-size="10" font-style="italic" text-anchor="middle">"Subtract 4″ from</text>
+                <text x="65" y="106" font-family="sans-serif" font-size="10" font-style="italic" text-anchor="middle">desired image size"</text>
+            </g>
+        </svg>
+    `;
+
+    const canvasDiagram2 = `
+        <svg viewBox="0 0 520 200" width="100%" height="200" xmlns="http://www.w3.org/2000/svg">
+            <rect x="10" y="10" width="340" height="180" fill="#f1f5f9" stroke="#334155" stroke-width="2"/>
+            <rect x="28" y="25" width="304" height="150" fill="#475569" stroke="#1e293b" stroke-width="1.5"/>
+            <!-- Outer dimensions -->
+            <line x1="10" y1="195" x2="350" y2="195" stroke="#0f172a" stroke-width="1.5"/>
+            <text x="180" y="192" font-family="sans-serif" font-size="11" font-weight="bold" text-anchor="middle">33.75″</text>
+            <line x1="355" y1="10" x2="355" y2="190" stroke="#0f172a" stroke-width="1.5"/>
+            <text x="358" y="105" font-family="sans-serif" font-size="11" font-weight="bold" text-anchor="start">21.5″</text>
+            <!-- Painted dimensions -->
+            <text x="180" y="168" font-family="sans-serif" font-size="11" font-weight="bold" text-anchor="middle" fill="#ffffff">30.75″</text>
+            <text x="325" y="105" font-family="sans-serif" font-size="11" font-weight="bold" text-anchor="end" fill="#ffffff">18.5″</text>
+            <!-- Border label -->
+            <text x="19" y="105" font-family="sans-serif" font-size="10" font-weight="bold" text-anchor="middle">1.5″</text>
+            <!-- Spec Box -->
+            <g transform="translate(380, 20)">
+                <rect x="0" y="0" width="130" height="140" fill="#ffffff" stroke="#1e3a8a" stroke-width="2" rx="6"/>
+                <text x="65" y="25" font-family="sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#1e3a8a">13-1303</text>
+                <text x="65" y="60" font-family="sans-serif" font-size="10" font-weight="bold" text-anchor="middle" fill="#0f172a">Ordering Instructions:</text>
+                <text x="65" y="80" font-family="sans-serif" font-size="10" font-style="italic" text-anchor="middle">"Subtract 3″ from</text>
+                <text x="65" y="95" font-family="sans-serif" font-size="10" font-style="italic" text-anchor="middle">desired image size"</text>
+            </g>
+        </svg>
+    `;
+
+    const canvasDiagram3 = `
+        <svg viewBox="0 0 520 200" width="100%" height="200" xmlns="http://www.w3.org/2000/svg">
+            <rect x="10" y="10" width="340" height="180" fill="#f1f5f9" stroke="#334155" stroke-width="2"/>
+            <rect x="20" y="20" width="320" height="160" fill="#334155" stroke="#1e293b" stroke-width="1.5"/>
+            <!-- Outer dimensions -->
+            <line x1="10" y1="195" x2="350" y2="195" stroke="#0f172a" stroke-width="1.5"/>
+            <text x="180" y="192" font-family="sans-serif" font-size="11" font-weight="bold" text-anchor="middle">61.5″</text>
+            <line x1="355" y1="10" x2="355" y2="190" stroke="#0f172a" stroke-width="1.5"/>
+            <text x="358" y="105" font-family="sans-serif" font-size="11" font-weight="bold" text-anchor="start">41.5″</text>
+            <!-- Painted dimensions -->
+            <text x="180" y="172" font-family="sans-serif" font-size="11" font-weight="bold" text-anchor="middle" fill="#ffffff">60″</text>
+            <text x="333" y="105" font-family="sans-serif" font-size="11" font-weight="bold" text-anchor="end" fill="#ffffff">40″</text>
+            <!-- Border label -->
+            <text x="15" y="105" font-family="sans-serif" font-size="9" font-weight="bold" text-anchor="middle">.75″</text>
+            <!-- Spec Box -->
+            <g transform="translate(380, 20)">
+                <rect x="0" y="0" width="130" height="140" fill="#ffffff" stroke="#1e3a8a" stroke-width="2" rx="6"/>
+                <text x="65" y="25" font-family="sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#1e3a8a">13-1305</text>
+                <text x="65" y="50" font-family="sans-serif" font-size="11" font-weight="bold" text-anchor="middle">Height: 2″</text>
+                <text x="65" y="75" font-family="sans-serif" font-size="10" font-weight="bold" text-anchor="middle" fill="#0f172a">Ordering Instructions:</text>
+                <text x="65" y="92" font-family="sans-serif" font-size="10" font-style="italic" text-anchor="middle">"Subtract 4″ from</text>
+                <text x="65" y="106" font-family="sans-serif" font-size="10" font-style="italic" text-anchor="middle">desired image size"</text>
+            </g>
+        </svg>
+    `;
+
+    const questions = [
+        { id: 1, text: "At the latest, orders which are due tomorrow, should be able to be picked up...", options: ["a. Tomorrow, when the store opens at 9:00 AM", "b. Tomorrow, after you finish the order and call your customer", "c. By the time the store closes at 8:00 PM."], ans: ["a"] },
+        { id: 2, text: "Which of the following is an acceptable stack code for a shadowbox extender?", options: ["a. 1A", "b. 1B", "c. 2A", "d. None of these-Extender Frames don’t get stack codes"], ans: ["b"] },
+        { id: 3, text: "What is the minimum size you may order a wooden moulding", options: ["a. 5″", "b. 5.5″", "c. 6″", "d. 10″"], ans: ["b"] },
+        { id: 4, text: "What is the maximum size of metal mouldings?", options: ["a. 48″", "b. 72″", "c. 92″ unless specified otherwise on the label", "d. None of these"], ans: ["b"] },
+        { id: 5, text: "What is the maximum size of wooden mouldings?", options: ["a. 48″", "b. 72″ unless specified otherwise on the label", "c. 92″", "d. None of these"], ans: ["b"] },
+        { id: 6, text: "To check-in Custom Frames on Freight days, you should", options: ["a. Stand the boxes upright", "b. Lay the boxes flat and remove each piece of foam", "c. Thumb through each layer of foam without removing them"], ans: ["b"] },
+        { id: 7, text: "To check-in custom frames on Freight days, you should verify", options: ["a. The size of the frame", "b. The moulding number", "c. The qty ordered", "d. The condition of the moulding", "e. All of these should be verified"], ans: ["e"] },
+        { id: 8, text: "Simple matte black frames show the most defects, and are the most difficult ones to touch up.", options: ["a. True", "b. False"], ans: ["a"] },
+        { id: 9, text: "The plastic, Econospace® spacers will protect artwork from damage caused by which of these?", options: ["a. Temperature changes & humidity", "b. Acid & Lignin", "c. Aggressive adhesives", "d. All of these"], ans: ["a"] },
+        { id: 10, text: "Which mounting method should be used for the majority of shadowboxes?", options: ["a. Couching", "b. Tacking", "c. Lacing", "d. Stretching"], ans: ["a"] },
+        { id: 11, text: "If the largest offset clips are not tall enough to Fit the canvas into the frame, which of these alternative Fitting methods may be used instead?", options: ["a. Make your own clips out of strap hangers", "b. Use straps made from strips of canvas or leather", "c. Heavy-Duty picture hanging wire", "d. Any of these can work", "e. None of these are allowed"], ans: ["e"] },
+        { id: 12, text: "Regarding our hardwood frames (walnut, oak, maple, etc.) which of these is a true statement?", options: ["a. Some have hand applied veneers", "b. The colors and grain structure vary throughout the sticks so each piece will look different", "c. They are often paper or foil wrapped and cannot be touched up", "d. All of these are true"], ans: ["b"] },
+        { id: 13, text: "To make a very large wooden frame, stacking two thin mouldings is about as sturdy as a single wider moulding.", options: ["a. True", "b. False, thinner moulding should only be stacked with more substantial ones"], ans: ["b"] },
+        { id: 14, text: "When prepping shadowboxes, which of these mounting methods is NOT allowed?", options: ["a. Couching", "b. Gluing", "c. Hinging", "d. Lacing"], ans: ["b"] },
+        { id: 15, text: "If your customer says they're ok with you using glue for their shadowbox, you should...", options: ["a. Make a note on the ticket and have the customer sign it", "b. Inform them of another method you'll use instead", "c. Either of these"], ans: ["b"] },
+        { id: 16, text: "Your customer has a very large cityscape painting on a piece of plywood that measures 48x96. Which of these mouldings will be acceptable for that size?", options: ["a. Metal Mouldings", "b. Wooden mouldings more than 3″ Wide", "c. Any two wooden mouldings that are stacked together", "d. None of these"], ans: ["d"] },
+        { id: 17, text: "Your customer wants a matte black wooden frame for their 32x38 piece. The moulding they point at is 12-1201″; the label says the max is 42 UI. What is an appropriate response to your customer in this situation?", options: ["a. The label is just a recommendation, you can still order it up to 72 inches long", "b. Order it anyway", "c. Politely explain that frame won't work, and help select an alternate.", "d. Inform them of the potential issues and if they persist, write a disclaimer on the ticket and have them sign it."], ans: ["c"] },
+        { id: 18, text: "The label on the moulding your customer wants says it is “Not recommended for frames over 60 United Inches” but the piece you are framing is 40x60. Would this be ok to order?", options: ["a. Yes", "b. No"], ans: ["b"] },
+        { id: 19, text: "There are 'secondary labels' on some of the mouldings, the information on them is...", options: ["a. For you, the framer, so you can understand the properties of the moulding", "b. For you to provide to your customers during your consultations, so that they can make informed decisions about their purchases", "c. To help you answer common questions about some of the mouldings; such as “What type of wood is this?” or “Do you have any mouldings made in the USA?”", "d. All of these"], ans: ["d"] },
+        { id: 20, text: "If a stained hardwood moulding comes in, and the color or grain pattern is a bit different and doesn't match your sample perfectly, you should....", options: ["a. Send a snapshot to Greco", "b. Not worry about it, you have already explained the possibility of variations to your customer and they are expecting a frame made from real wood and understand that the variations are part of the beauty.", "c. Order it again to see if it is better", "d. All of these"], ans: ["b"] },
+        { id: 21, text: "If your customer wants a wooden frame that is going to be pretty consistent, in terms of color and grain pattern, you should suggest which of the following?", options: ["a. A stained hardwood moulding", "b. A wooden moulding with a foil or paper wrap", "c. A wooden moulding with a burl veneer", "d. Any of these"], ans: ["b"] },
+        { id: 22, text: "As you work with your customer to design a frame package, you are required to wear gloves to handle which of the following?", options: ["a. Easily replaceable artwork", "b. Antique photos", "c. Jerseys and shadowbox items", "d. Canvas paintings", "e. You are required to wear gloves to handle all artwork & items."], ans: ["e"] },
+        { id: 23, text: "Wearing gloves will protect the artwork, paper, canvas, etc. from which of the following?", options: ["a. Fingerprints and oils from your hands", "b. Smudging charcoals, graphite drawings, and pastels", "c. Smearing wet paint", "d. All of these"], ans: ["a"] },
+        { id: 24, text: "Glazing should be recommended on all of the following EXCEPT...", options: ["a. Paper artwork such as photographs and drawings", "b. Needleart & Shadowboxes", "c. Paintings on Canvas", "d. Glazing is recommended for all of these"], ans: ["d"] },
+        { id: 25, text: "Our custom and Art Dept. mats (all of the mats in the corner sample rack) will protect artwork from damage caused by all of the following EXCEPT...", options: ["a. Acid and Lignin Damage", "b. Temperature changes and humidity", "c. UV Light", "d. All of these"], ans: ["c"] },
+        { id: 26, text: "Using mats in a frame package has which of the following benefits?", options: ["a. Using proportionately sized mats will provide an empty space around the piece that lets the viewer's eyes focus on the artwork.", "b. A mat that is larger than the artwork will prevent the wooden frame from touching the piece – protecting it from Acid burn.", "c. A double mat, will create space between the artwork and the glazing – protecting it from damage that can be caused by changes in temperatures and humidity", "d. All of these, Mats are one of the most important materials used in Custom Framing."], ans: ["d"] },
+        { id: 27, text: "What is the largest size available for glass?", options: ["a. 32x40", "b. 36x48", "c. 40x60", "d. It may be custom ordered as large as necessary"], ans: ["b"] },
+        { id: 28, text: "Drymounting is not a good option for", options: ["a. Delicate items", "b. Heat-sensitive items", "c. Original art", "d. Anything valuable/difficult to replace", "e. All of these"], ans: ["e"] },
+        { id: 29, text: "Which of the following should always be DOUBLE matted with REVERSE bevels", options: ["a. Cross-stitch and other delicate Needleart", "b. 'Friable' artwork such as Pastels, charcoal, and chalk", "c. Drymounted pieces such as Photography and Signs", "d. None of these should have a reverse bevel"], ans: ["b"] },
+        { id: 30, text: "If your customer does not want to pay for the needleart fee (for couching or lacing their needleart) which of the following methods ARE acceptable alternatives?", options: ["a. Spray adhesive on the substrate", "b. ATT/ATG along the top", "c. Drymounting", "d. None of these are acceptable alternatives"], ans: ["d"] },
+        { id: 31, text: "Which of the following should you offer your customer to mount their cross-stitch needleart?", options: ["a. Lacing", "b. Couching", "c. Drymounting", "d. Direct Contact Overlay"], ans: ["a"] },
+        { id: 32, text: "Which of the following should you offer your customer to mount a doily needleart?", options: ["a. Lacing", "b. Couching", "c. Drymounting", "d. Direct Contact Overlay"], ans: ["b"] },
+        { id: 33, text: "Which of the following should you suggest to your customer in order to mount their very delicate antique needleart?", options: ["a. Lacing", "b. Couching", "c. Drymounting", "d. Direct Contact Overlay"], ans: ["d"] },
+        { id: 34, text: "Which of these items is most important and should be included on the ticket for MOST paper artwork (photographs, prints, documents, etc)?", options: ["a. Double Mats", "b. Museum Glass", "c. Stacked Frames", "d. Drymount", "e. All of these"], ans: ["a"] },
+        { id: 35, text: "What is the largest size of offset clip we carry?", options: ["a. ¼″", "b. ½″", "c. ¾″", "d. 1″"], ans: ["b"] },
+        { id: 36, text: "If you take an order for a deep canvas in a frame that is too shallow for offset clips or brad nails to reach...", options: ["a. You'll need to make your own straps to hold it in place", "b. You'll have to contact the customer to come in and select a new frame"], ans: ["b"] },
+        { id: 37, text: "Which of the following should NOT be used on a canvas panel or canvas?", options: ["a. Glass", "b. Foamboard Backing", "c. Mats", "d. Spacers", "e. None of these should be used on canvases"], ans: ["c"] },
+        { id: 38, text: "You should use ______ to keep the glass away from canvas paintings", options: ["a. Spacers", "b. Mats", "c. Either of these", "d. Neither of these, you shouldn't put glass on canvas paintings."], ans: ["a"] },
+        { id: 39, text: "What may happen if you ignore the maximum size recommendation on a stretcher bar for a canvas stretch?", options: ["a. The stretcher bar may come in with a slight warp", "b. The stretcher bar will bend as you stretch it", "c. There may be a gap between the stretcher bar and the frame due to the stretcher bar bowing", "d. Greco may delete the order", "e. All of these"], ans: ["e"] },
+        { id: 40, text: "What is the maximum number of EXTENDERS are you allowed to add to a shadowbox?", options: ["a. 2", "b. 3", "c. 4", "d. 6"], ans: ["b"] },
+        { id: 41, text: "When ordering a shadowbox with an extender, which moulding should be the “A” frame (for the stack code)", options: ["a. The Shadowbox", "b. The Extender Frame", "c. Neither of these, extenders don't get stack codes"], ans: ["a"] },
+        { id: 42, text: "When ordering a shadowbox with an extender, which moulding should be the “B” frame (for the stack code)?", options: ["a. The Shadowbox", "b. The Extender Frame", "c. Neither of these, extenders don't get stack codes"], ans: ["b"] },
+        { id: 43, text: "How do you know which extender frame to use with which shadowbox?", options: ["a. The labels are color coded", "b. The extenders are grouped with the appropriate shadowboxes on the sample wall", "c. The label on the shadowbox lists which extender frame should be used", "d. All of these", "e. None of these, you can use any extender frame you want"], ans: ["d"] },
+        { id: 44, text: "The price for the Jersey form is already included in the shadowbox fee", options: ["a. True", "b. False"], ans: ["b"] },
+        { id: 45, text: "Jersey Forms are optional when you are taking an order for a jersey", options: ["a. True", "b. False"], ans: ["b"] },
+        { id: 46, text: "Wall Buddies are free for custom orders", options: ["a. True", "b. False"], ans: ["b"] },
+        { id: 47, text: "Which of these statements regarding mats is true?", options: ["a. Most orders should have a 2-3″ mat", "b. You should use stacked frames instead of mats", "c. You should ask your customer how much matting they want", "d. You should determine the mat width using the Golden Ratio & Proportion Guide"], ans: ["d"] },
+        { id: 48, text: "Which types of mats are made from Cotton, are naturally acid & lignin free, and are pigmented instead of dyed – making them the safest option for artwork.", options: ["a. Museum Rag-Mats", "b. Paper mats", "c. All of our custom, acid free mats"], ans: ["a"] },
+        { id: 49, text: "When designing the frame package, which of the following will create a more aesthetically pleasing design?", options: ["a. The mat width should be equal to the size of the frame", "b. The mat width should be at least 2/3 the total border width", "c. The mat width should be narrower than the frame"], ans: ["b"] },
+        { id: 50, text: "If your customer has an 18x24 photo, and you suggest a 3″ wide moulding and a 3.5″ mat width, what aesthetic issues will cause the frame assembly to look odd?", options: ["a. The proportions are not correct", "b. The moulding width and the mat width are too similar", "c. The proportions are correct but the mat shouldn't be wider than the frame"], ans: ["b"] },
+        { id: 51, text: "How many regular frames (not shadowboxes) are you allowed to stack together?", options: ["a. 2", "b. 3", "c. 4", "d. 6"], ans: ["a"] },
+        { id: 52, text: "True or False: You may use an extender frame with any frame you want", options: ["a. True", "b. False"], ans: ["b"] },
+        { id: 53, text: "When calculating mat and frame sizes, you need to pay attention to which of the following?", options: ["a. The maximum size of the glass or glazing selected", "b. The max size of the matboard selected", "c. The maximum size of any fillets selected", "d. You must consider all of these"], ans: ["d"] },
+        { id: 54, text: "For which of the following types of art should you NEVER use the UV Acrylic glazing?", options: ["a. Charcoal", "b. Pastels", "c. Acrylic Paintings", "d. Never use UV Acrylic on any of these"], ans: ["d"] },
+        { id: 55, text: "Which of these types of glazing doesn't easily break and is recommended for large pieces or items hanging in high-traffic locations?", options: ["a. UV Clear Acrylic", "b. Preservation Clear glass", "c. AR 99 WW glass"], ans: ["a"] },
+        { id: 56, text: "Which of these materials should be included on EVERY ticket that includes matting?", options: ["a. Spacers", "b. Glass or Acrylic", "c. Photo Corners", "d. Stretcher Bars"], ans: ["b"] },
+        { id: 57, text: "When creating the ticket, you are required to list which of the following?", options: ["a. The subject of the art", "b. The medium used", "c. The condition of the piece", "d. All three of these are required"], ans: ["d"] },
+        { id: 58, text: "Which of the following is an example of a complete description/condition report?", options: ["a. Floral photograph, with acid burn", "b. Photograph of red and pink roses", "c. Flowers, acid burn", "d. All of these are acceptable"], ans: ["a"] },
+        { id: 59, text: "When a customer brings in an item that is already framed, when should you disassemble the piece?", options: ["a. Before you begin designing the order", "b. After your customer has agreed on a tentative price but before the customer signs the ticket", "c. After the ticket is complete and your customer has already signed the ticket", "d. When you are prepping the order"], ans: ["b"] },
+        { id: 60, text: "If your customer wants to completely replace the existing frame package for their artwork, how should you handle the customer's glass, mats, substrate, and frame that they will NOT be using?", options: ["a. Discard the mats and glass but keep the frame and store it with the finished piece to pick up along with their order", "b. Keep the mats, glass, and frame together, and put them in a bag on the Finished Order Shelves for them to pick up when they get their piece", "c. Disassemble all of it, store the artwork in a portfolio. Then use framer's points to reassemble everything, wrap the empty package for them, and return it to the customer before they leave the store.", "d. If you get their signature, you can throw it all away for them"], ans: ["c"] },
+        { id: 61, text: "In addition to the frame, mats, and glass... Which of the following should be added to the ticket when you take an order for a jersey shadowbox?", options: ["a. A shadowbox fee", "b. The shadowbox fee and spacers", "c. The shadowbox fee, and a jersey form", "d. The shadowbox fee, a jersey form, and a labor fee"], ans: ["c"] },
+        { id: 62, text: "Which of these is most important part of a frame package because it offers the most protection for most photographs, certificates, prints, & paper artwork while also elevating the overall design of the piece?", options: ["a. A stacked frame", "b. A fillet", "c. A proportionately sized double mat", "d. Econospace® Spacers"], ans: ["c"] },
+        { id: 63, text: "Which of these is NOT included in the shadowbox fee?", options: ["a. Acid Free Foamboard Substrate", "b. Matboard liners, for the sides of the shadowbox", "c. Mounting Supplies", "d. Matboard"], ans: ["d"] },
+        { id: 64, text: "Which of these IS included in the shadowbox fee?", options: ["a. Glass/Acrylic", "b. Thread", "c. Direct Contact Overlay", "d. Jersey Form"], ans: ["b"] },
+        { id: 65, text: "If your customer wants you to remove a picture from their frame and fit it into a new Hobby Lobby wall-frame; which of these fees should you add to the ticket?", options: ["a. Sectional assembly fee", "b. Fitting fee", "c. Sizing fee", "d. None of these"], ans: ["d"] },
+        { id: 66, text: "If your customer wants you to replace the family photo in their frame to an updated photo; which of these fees should you add to the ticket?", options: ["a. Fitting fee", "b. Sectional assembly fee", "c. Sizing fee", "d. None of these"], ans: ["a"] },
+        { id: 67, text: "If your customer wants you to replace the family photo in their frame to an updated photo; what type of ticket should this be?", options: ["a. Walk-In Ticket, finished in about 15 minutes while the customer shops", "b. Custom Ticket, due in 14 days", "c. Custom Ticket, due in 7 days"], ans: ["a"] },
+        { id: 68, text: "If your customer wants you to replace the hanger on their frame; which of these should you add to their ticket?", options: ["a. Fitting fee", "b. Paper & Hanger charge", "c. Both of these", "d. None of these"], ans: ["b"] },
+        { id: 69, text: "If you take a custom order with a double mat, and you'll be adding foam spacers to separate the mats, how should you charge for the foam spacers?", options: ["a. Charge the Resizing Fee", "b. Charge for Acid Free foamboard", "c. Charge the Spacers fee", "d. None of these"], ans: ["c"] },
+        { id: 70, text: "If your customer wants a pocket on the back of their custom frame for their Certificate of Authenticity; what should you do with the certificate while their order is in the frame shop?", options: ["a. Store it in the foamboard portfolio with the artwork", "b. Store it in a bag or envelope inside the portfolio with the artwork", "c. Do not store it, give it back to the customer to keep before they leave the store", "d. None of these"], ans: ["c"] },
+        { id: 71, text: "When you return a certificate of authenticity to a customer, what should you do to make sure there are no issues later?", options: ["a. Type the dimensions of the certificate on the ticket so the pocket will be the correct size.", "b. Type a note stating that you returned the certificate to the customer and have them sign it.", "c. Both of these are required"], ans: ["c"] },
+        { id: 72, text: "If your customer brings you a frame and asks you to add a wire, BUT there is a sticker on it that says not to add wire, how should you respond?", options: ["a. Explain that while you are not allowed to add wire, you can show them where the wire is so they can do it themselves.", "b. Write on the ticket that they are ok with you adding wire, and have them sign it. Then you can install the hanger.", "c. Explain that adding wire will stress the hangers and will cause them to pull out of the frame. Therefore, you can't add wire and neither should they.", "d. As long as you install new strap hangers, facing inwards, you can put wire on it."], ans: ["c"] },
+        { id: 73, text: "When you receive damaged or poorly cut custom mouldings with your freight, which of these is best for sharing the information with the correct groups?", options: ["a. The Pix app on the iPad", "b. The Frame Order App", "c. Call Greco customer service"], ans: ["a"] },
+        { id: 74, text: "After your customer has agreed to the ticket price, signed the ticket, & has left the store; which of these are you NOT allowed to edit on the ticket?", options: ["a. The due date", "b. The total price", "c. The description and condition", "d. You may not edit any of these"], ans: ["d"] },
+        { id: 75, text: "Which of the following does the Needleart fee NOT include?", options: ["a. Acid Free Foamboard", "b. Thread", "c. Direct Contact Overlay supplies", "d. All of these are included"], ans: ["c"] },
+        { id: 76, text: "Your customer brings over a Hobby Lobby wall frame and needs their picture installed & finished with paper and a hanger. Which fees should you add to their ticket?", options: ["a. Paper/Hanger fee only", "b. Paper/Hanger fee and Fitting Fee", "c. Paper/Hanger fee and Sectional Assembly", "d. Fitting Fee only"], ans: ["a"] },
+        { id: 77, text: "True or False: Customers with readymade frames typically want their orders finished today, and will almost always select a mat that is available now, if it is offered to them.", options: ["a. True", "b. False"], ans: ["a"] },
+        { id: 78, text: "True or False: Framers are NOT allowed to frame with the readymade shadowboxes", options: ["a. True", "b. False"], ans: ["b"] },
+        { id: 79, text: "If a customer wants an Art Dept. mat cut with four openings, when should you tell them it will be ready?", options: ["a. Tomorrow", "b. In 14 days", "c. 15 minutes or so", "d. None of these"], ans: ["c"] },
+        { id: 80, text: "If a customer wants a jersey framed in a readymade shadowbox, when should you tell them it will be ready?", options: ["a. Tomorrow", "b. In 14 days", "c. 15 minutes or so", "d. None of these"], ans: ["b"] },
+        { id: 81, text: "If a customer needs a poster drymounted and framed in a poster frame, when should you tell them it will be ready?", options: ["a. Tomorrow", "b. In 14 days", "c. 15 minutes or so", "d. None of these"], ans: ["c"] },
+        { id: 82, text: "If a customer comes in at 7:45 PM with several readymade frames they need finished, what should you do?", options: ["a. Tell them you have to put it on a custom ticket and they'll be ready in 14 days.", "b. Call a cross-trained employee to help you get them assembled immediately.", "c. Tell the customer you can do some but they have to bring the rest back later."], ans: ["b"] },
+        { id: 83, text: "If your customer needs you to put their art into their frame, what fee(s) should you charge them?", options: ["a. Paper/Hanger fee only", "b. Paper/Hanger fee and Fitting Fee", "c. Paper/Hanger fee and Sectional Assembly", "d. Fitting Fee only"], ans: ["d"] },
+        { id: 84, text: "Your customer brings you a family photo in Hobby Lobby frame, they ask you to replace it with another photo using the same frame and matting. What fee should you charge them?", options: ["a. Paper/Hanger fee only", "b. Paper/Hanger fee and Fitting Fee", "c. Fitting Fee only", "d. No Fees"], ans: ["c"] },
+        { id: 85, text: "Which of these IS NOT included in the Shadowbox Fee?", options: ["a. The liners", "b. The foamboard backing (substrate)", "c. Mats", "d. Thread"], ans: ["c"] },
+        { id: 86, text: "Which of these IS included in the Shadowbox Fee?", options: ["a. Jersey Forms", "b. Direct Contact Overlay", "c. Matboards", "d. Liners that match the selected matboard"], ans: ["d"] },
+        { id: 87, text: "Your customer wants a GALLERY WRAP, they want the whole painting to be visible and the sides to be white. What size should you set as the “Art Region”, in IF-Visualization?", options: ["a. 37.5″ x 23.5″", "b. 43.5″ x 29.5″", "c. 33.5″ x 19.5″", "d. 38.5″ x 24.5″"], ans: ["a"], diagram: canvasDiagram1 },
+        { id: 88, text: "After sending the design to the IFRM Ticket Screen, you'll add the stretcher bar to the ticket, and change the “Frame Size” to which of the following sizes?", options: ["a. 37.5″ x 23.5″", "b. 43.5″ x 29.5″", "c. 33.5″ x 19.5″", "d. 38.5″ x 24.5″"], ans: ["c"], diagram: canvasDiagram1 },
+        { id: 89, text: "They will be framing it using a FLOATER FRAME with a .5″ gap. In the Frame Order App, what size will you need to order the frame?", options: ["a. 34.5″ x 20.5″", "b. 34″ x 20″", "c. 38.5″ x 24.5″", "d. 35.5″ x 21.5″"], ans: ["c"], diagram: canvasDiagram1 },
+        { id: 90, text: "Your customer wants a STANDARD canvas stretch and frame. What size should you set as the “Art Region”, in IF-Visualization?", options: ["a. 28.375″ x 16.125″", "b. 27.75″ x 15.5″", "c. 31.5″ x 19.25″", "d. 30.75″ x 18.5″", "e. None of these"], ans: ["d"], diagram: canvasDiagram2 },
+        { id: 91, text: "After sending the design to the IFRM Ticket Screen, you'll add the stretcher bar to the ticket, and change the “Frame Size” to which of the following sizes?", options: ["a. 28.375″ x 16.125″", "b. 27.75″ x 15.5″", "c. 31.5″ x 19.25″", "d. 30.75″ x 18.5″", "e. None of these"], ans: ["b"], diagram: canvasDiagram2 },
+        { id: 92, text: "In the Frame Order App, what size will you need to order the frame?", options: ["a. 30.75″ x 18.5″", "b. 33.75″ x 21.5″", "c. 31.5″ x 19.25″", "d. 28.5″ x 16.25″"], ans: ["a"], diagram: canvasDiagram2 },
+        { id: 93, text: "Another customer also wants a GALLERY WRAP, there is very little border to work with. What should you make sure your customer is aware of?", options: ["a. You will have to trim the white off", "b. 2″ on each side of the painting will wrap around the stretcher bar", "c. Explain that this painting won't work as a gallery wrap", "d. None of these are true"], ans: ["b"], diagram: canvasDiagram3 },
+        { id: 94, text: "What size should you set as the “Art Region”, in IF-Visualization?", options: ["a. 32″ x 52″", "b. 36″ x 56″", "c. 41.5″ x 61.5″", "d. 40″ x 60″"], ans: ["b"], diagram: canvasDiagram3 },
+        { id: 95, text: "After sending the design to the IFRM Ticket Screen, you'll add the stretcher bar to the ticket, and change the “Frame Size” to which of the following sizes?", options: ["a. 32″ x 52″", "b. 36″ x 56″", "c. 41.5″ x 61.5″", "d. 40″ x 60″"], ans: ["a"], diagram: canvasDiagram3 },
+        { id: 96, text: "They will be framing it using a FLOATER FRAME with a .5″ gap. In the Frame Order App, what size will you need to order the frame?", options: ["a. 43″ x 29″", "b. 32.5″ x 52.5″", "c. 42″ x 62″", "d. 37″ x 57″"], ans: ["d"], diagram: canvasDiagram3 },
+        { id: 97, text: "Your customer says they are ok with you using glue to mount their coins in a shadowbox.", options: ["a. This is allowed.", "b. It's allowed if the customer signs the notes/trimming section of the ticket, authorizing it.", "c. Glue is never an acceptable mounting method for items in shadowboxes."], ans: ["c"] },
+        { id: 98, text: "Your customer brings in an item that is extremely valuable and/or rare.", options: ["a. Take the order, you shouldn't turn down any custom orders.", "b. Suggest the customer consult a conservator or conservationist instead."], ans: ["b"] },
+        { id: 99, text: "If you have a customer that wants you to frame something that you are uncomfortable with, or find personally offensive, what should you do?", options: ["a. Inform them that this is a family friendly store and decline to take the order", "b. Politely excuse yourself to find another framer or manager to take the order", "c. Order the framing materials for them but have the customer assemble it on their own"], ans: ["b"] },
+        { id: 100, text: "Your customer has asked you to cut the mat to look like the logo of their favorite team.", options: ["a. Try to replicate it the best you can.", "b. Inform them that we can't replicate anything that is trademarked."], ans: ["b"] }
+    ];
+
+    function initQuiz() {
+        const container = document.getElementById('mc-container');
+        questions.forEach(q => {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+            card.id = `q-card-${q.id}`;
+            
+            let optionsHTML = q.options.map(opt => {
+                const optVal = opt.charAt(0);
+                const inputType = q.multi ? 'checkbox' : 'radio';
+                const inputName = q.multi ? `q${q.id}_${optVal}` : `q${q.id}`;
+                return `
+                    <label class="option-label">
+                        <input type="${inputType}" name="${inputName}" value="${optVal}" data-qid="${q.id}">
+                        ${opt}
+                    </label>
+                `;
+            }).join('');
+
+            const displayAns = q.ans.join(', ').toUpperCase();
+
+            let diagramHTML = '';
+            if (q.diagram) {
+                diagramHTML = `<div class="diagram-container">${q.diagram}</div>`;
+            }
+
+            card.innerHTML = `
+                <div class="question-text">${q.id}. ${q.text}</div>
+                ${diagramHTML}
+                <div class="options-list">${optionsHTML}</div>
+                <div class="feedback">Correct Answer: ${displayAns}</div>
+            `;
+            container.appendChild(card);
+        });
+
+        const form = document.getElementById('quiz-form');
+        form.addEventListener('input', saveState);
+        form.addEventListener('change', saveState);
+
+        loadState();
+    }
+
+    function saveState() {
+        const state = {};
+
+        questions.forEach(q => {
+            if (q.multi) {
+                const checked = [];
+                q.options.forEach(opt => {
+                    const optVal = opt.charAt(0);
+                    const el = document.querySelector(`input[name="q${q.id}_${optVal}"]`);
+                    if (el && el.checked) checked.push(optVal);
+                });
+                state[`q${q.id}`] = checked;
+            } else {
+                const selected = document.querySelector(`input[name="q${q.id}"]:checked`);
+                if (selected) state[`q${q.id}`] = selected.value;
+            }
+        });
+
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function loadState() {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (!saved) return;
+
+        try {
+            const state = JSON.parse(saved);
+
+            questions.forEach(q => {
+                const val = state[`q${q.id}`];
+                if (!val) return;
+
+                if (q.multi && Array.isArray(val)) {
+                    val.forEach(optVal => {
+                        const cb = document.querySelector(`input[name="q${q.id}_${optVal}"]`);
+                        if (cb) cb.checked = true;
+                    });
+                } else if (!q.multi) {
+                    const radio = document.querySelector(`input[name="q${q.id}"][value="${val}"]`);
+                    if (radio) radio.checked = true;
+                }
+            });
+        } catch (e) {
+            console.error("Could not load saved test answers:", e);
+        }
+    }
+
+    function gradeQuiz() {
+        let score = 0;
+
+        questions.forEach(q => {
+            const card = document.getElementById(`q-card-${q.id}`);
+            card.classList.remove('correct', 'incorrect');
+
+            if (q.multi) {
+                const selected = [];
+                q.options.forEach(opt => {
+                    const optVal = opt.charAt(0);
+                    const el = document.querySelector(`input[name="q${q.id}_${optVal}"]`);
+                    if (el && el.checked) selected.push(optVal);
+                });
+
+                const isCorrect = q.ans.length === selected.length && q.ans.every(val => selected.includes(val));
+                if (isCorrect) {
+                    score++;
+                    card.classList.add('correct');
+                } else {
+                    card.classList.add('incorrect');
+                }
+            } else {
+                const selected = document.querySelector(`input[name="q${q.id}"]:checked`);
+                if (selected && q.ans.includes(selected.value)) {
+                    score++;
+                    card.classList.add('correct');
+                } else {
+                    card.classList.add('incorrect');
+                }
+            }
+        });
+
+        const scoreBoard = document.getElementById('score-board');
+        const scoreText = document.getElementById('score-text');
+        const scorePercentage = document.getElementById('score-percentage');
+        const passStatus = document.getElementById('pass-status');
+
+        const pct = Math.round((score / 100) * 100);
+        scoreText.textContent = `Your Score: ${score} / 100`;
+        scorePercentage.textContent = `${pct}%`;
+
+        if (score >= 90) {
+            passStatus.textContent = "PASSED";
+            passStatus.className = "pass-badge pass";
+        } else {
+            passStatus.textContent = "FAILED (90/100 required)";
+            passStatus.className = "pass-badge fail";
+        }
+
+        scoreBoard.style.display = 'block';
+        scoreBoard.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function resetQuiz() {
+        localStorage.removeItem(STORAGE_KEY);
+        document.getElementById('quiz-form').reset();
+        document.querySelectorAll('.question-card').forEach(card => {
+            card.classList.remove('correct', 'incorrect');
+        });
+        document.getElementById('score-board').style.display = 'none';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    window.onload = initQuiz;
+</script>
+
+</body>
+</html>

@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frame Shop Certification Test - Section 2</title>
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --primary-hover: #1d4ed8;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #0f172a;
+            --border: #e2e8f0;
+            --success: #16a34a;
+            --error: #dc2626;
+            --success-bg: #f0fdf4;
+            --error-bg: #fef2f2;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 24px;
+            border: 1px solid var(--border);
+        }
+
+        h1 {
+            margin: 0 0 12px 0;
+            color: var(--primary);
+            font-size: 1.8rem;
+        }
+
+        .instructions {
+            font-size: 0.95rem;
+            color: #475569;
+            background: #f1f5f9;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .section {
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 24px;
+            border: 1px solid var(--border);
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 8px;
+            margin-bottom: 20px;
+        }
+
+        .question-card {
+            margin-bottom: 20px;
+            padding: 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .question-text {
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .diagram-container {
+            margin: 16px 0;
+            padding: 16px;
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            overflow-x: auto;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.15s ease;
+        }
+
+        .option-label:hover {
+            background-color: #f8fafc;
+        }
+
+        .option-label input {
+            margin-right: 12px;
+        }
+
+        .question-card.correct {
+            border-color: var(--success);
+            background-color: var(--success-bg);
+        }
+
+        .question-card.incorrect {
+            border-color: var(--error);
+            background-color: var(--error-bg);
+        }
+
+        .feedback {
+            margin-top: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .correct .feedback {
+            display: block;
+            color: var(--success);
+        }
+
+        .incorrect .feedback {
+            display: block;
+            color: var(--error);
+        }
+
+        .controls {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        button.reset-btn {
+            background-color: #64748b;
+        }
+
+        button.reset-btn:hover {
+            background-color: #475569;
+        }
+
+        #score-board {
+            display: none;
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px solid var(--primary);
+            margin-top: 24px;
+            text-align: center;
+        }
+
+        #score-board h2 {
+            margin: 0 0 8px 0;
+        }
+
+        .pass-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-weight: bold;
+            color: white;
+            margin-top: 8px;
+        }
+
+        .pass { background-color: var(--success); }
+        .fail { background-color: var(--error); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Section 2: For Framers & Managers ONLY</h1>
+        <div class="instructions">
+            <strong>Frame Shop Manual Pages 12–24</strong><br>
+            Cross-Trained Employees should not take this test. Select the best answer for each question. Your progress is saved automatically. A score of <strong>90/100 (90%)</strong> or higher is required to pass.
+        </div>
+    </header>
+
+    <form id="quiz-form">
+        <div class="section">
+            <div class="section-title">Questions 1–100</div>
+            <div id="mc-container"></div>
+        </div>
+
+        <div class="controls">
+            <button type="button" onclick="gradeQuiz()">Submit & Grade</button>
+            <button type="button" class="reset-btn" onclick="resetQuiz()">Reset Test</button>
+        </div>
+    </form>
+
+    <div id="score-board">
+        <h2 id="score-text">Your Score: 0 / 100</h2>
+        <div id="score-percentage" style="font-size: 1.2rem; margin-bottom: 8px;">0%</div>
+        <div id="pass-status" class="pass-badge">STATUS</div>
+    </div>
+</div>
+
+<script>
+    const STORAGE_KEY = 'frameShopSection2Answers';
+
+    const questions = [
+        { id: 1, text: "Which of these should you NOT do each night?", options: ["a. Turn off the Frame Shop PCs", "b. Turn off and drain the Air Compressor", "c. Turn off the Wizard ECU (the DriverPak)."], ans: ["a"] },
+        { id: 2, text: "When does the In & Out Of Stock Report come out?", options: ["a. Mon. & Wed. morning", "b. Tues. & Thurs. morning", "c. Tues. & Fri. morning", "d. Wed. & Fri. morning"], ans: ["c"] },
+        { id: 3, text: "Orders that are due tomorrow, should be completed", options: ["a. Yesterday", "b. Today", "c. Tomorrow", "d. Either Today or Tomorrow as long as you call the customer."], ans: ["b"] },
+        { id: 4, text: "If someone calls to request customer ticket details or contact info, you may share that with...?", options: ["a. Other Customers", "b. Hobby Lobby I/S Help Desk", "c. Hobby Lobby Frame Shop Support Group", "d. None of the above. Never provide customer information to anyone, direct questions to your managers."], ans: ["d"] },
+        { id: 5, text: "When you’re processing orders, finding and cutting mat scraps will help you...", options: ["a. Minimize overstock", "b. Get a head-start on prepping the orders", "c. Catch and correct mistakes before the order is transmitted", "d. All of these"], ans: ["d"] },
+        { id: 6, text: "As you process an order; if you find a mat scrap, you should", options: ["a. Put the uncut mat with the order", "b. Cut it immediately and store it with the order", "c. Store the uncut mat in Slot B to be prepped later"], ans: ["b"] },
+        { id: 7, text: "Which of the following should be stored in a bag inside the portfolio?", options: ["a. Diplomas", "b. Photos", "c. Prints", "d. All of these"], ans: ["d"] },
+        { id: 8, text: "Which of the following SHOULD NOT be stored in a bag inside the portfolio?", options: ["a. Chalk pastels", "b. Oil pastels", "c. Graphite drawings", "d. All of these"], ans: ["d"] },
+        { id: 9, text: "How should you store a pastel drawing?", options: ["a. In a bag-inside the portfolio", "b. Inside of a portfolio with foamboard donut spacer around it", "c. In a bag-inside the portfolio with foamboard spacers around it", "d. Any of the above"], ans: ["b"] },
+        { id: 10, text: "If you are re-using a customer’s frame on a custom order, where should you store it?", options: ["a. Inside a portfolio", "b. With the artwork", "c. On the frame storage panels", "d. On the Finished orders rack"], ans: ["c"] },
+        { id: 11, text: "If you are re-using a customer’s glass on a custom order, where should you store it?", options: ["a. Inside the frame it came in", "b. Inside the portfolios", "c. In the Primary Assembly Table (wrapped in cardboard /foamboard)", "d. The customer should take the glass with them"], ans: ["c"] },
+        { id: 12, text: "How should you store a customer’s certificate of authenticity?", options: ["a. Inside a bag-in the portfolio", "b. In an envelope taped to the portfolio", "c. In an envelope inside the file cabinet", "d. None of these, the customer should take it with them after placing the order"], ans: ["d"] },
+        { id: 13, text: "If today is Saturday-March 3rd, the latest the order is allowed to be due is", options: ["a. Friday-March 16th", "b. Saturday-March 17th", "c. Monday-March 20th", "d. Tuesday-March 21st"], ans: ["b"] },
+        { id: 14, text: "ALL custom frame and mat transmittals should be transmitted no later than ______ on your assigned order day.", options: ["a. 11:00 AM (your local time zone)", "b. 11:00 AM (Central Time zone)", "c. 3:00 PM (Central Time zone)"], ans: ["b"] },
+        { id: 15, text: "In the Frame Order App, you should order the mats, fillets, and frame together as a group, rather than creating a new ticket for each item.", options: ["a. True", "b. False"], ans: ["a"] },
+        { id: 16, text: "When ordering a CORNER SAMPLE in the Frame Order App, what’s the 1st thing you’ll do after creating a ticket?", options: ["a. Select “Moulding” from the drop down menu", "b. Type the moulding number you need", "c. Click the “Corner Sample” checkbox"], ans: ["c"] },
+        { id: 17, text: "How many corner samples can you order on a single ticket in the Frame Order App?", options: ["a. 1 per ticket", "b. 2 per ticket", "c. 6 per ticket"], ans: ["a"] },
+        { id: 18, text: "If you have a question about the Frame Order App, where can you find the Frame Order User Guide?", options: ["a. Section 5 of the Frame Shop Manual", "b. It is on Dox", "c. Both of these are correct"], ans: ["c"] },
+        { id: 19, text: "How can you be sure your order is transmitted with the correct information?", options: ["a. Greco will call if they notice a mistake", "b. Double check each item individually", "c. The system doesn’t allow you to make mistakes", "d. Call Greco for help"], ans: ["b"] },
+        { id: 20, text: "Which of the following should NEVER be given a stack code?", options: ["a. Stretcher bars and fillets", "b. Shadowbox Extender Frames", "c. Shadowbox Cap Frames", "d. All of these"], ans: ["a"] },
+        { id: 21, text: "Which of the following is an acceptable stack code for a shadowbox extender?", options: ["a. 1A", "b. 1B", "c. 2A", "d. None of these-Extender Frames don’t get stack codes"], ans: ["b"] },
+        { id: 22, text: "Which of the following is an acceptable stack code for a metal frame?", options: ["a. 1A", "b. 1B", "c. 2A", "d. None of these - Metal frames aren’t available to stack"], ans: ["d"] },
+        { id: 23, text: "What is the minimum size you may order a metal moulding?", options: ["a. 5″", "b. 5.5″", "c. 6″", "d. 10″"], ans: ["b"] },
+        { id: 24, text: "What is the minimum size you may order a stretcher bar?", options: ["a. 5″", "b. 5.5″", "c. 6″", "d. 10″"], ans: ["b"] },
+        { id: 25, text: "What is the maximum size of custom frames?", options: ["a. 48″", "b. 72″ unless specified otherwise on the label", "c. 92″", "d. None of these"], ans: ["b"] },
+        { id: 26, text: "What is the maximum size of fillets?", options: ["a. 48″", "b. 72″", "c. 92″", "d. None of these"], ans: ["a"] },
+        { id: 27, text: "Custom Nameplates must be typed with...", options: ["a. The desired spelling", "b. The desired punctuation", "c. The desired capitalization", "d. All of these"], ans: ["d"] },
+        { id: 28, text: "To check-in Custom Frames on Freight days, you should", options: ["a. Stand the boxes upright", "b. Keep the boxes flat at all times, and remove each layer of foam", "c. Thumb through each layer of foam without removing them"], ans: ["b"] },
+        { id: 29, text: "If you are checking in your custom frames and notice one is missing, what should you do first?", options: ["a. Contact your manager", "b. Notify the customer", "c. Pull out all of the foam from the custom frame boxes", "d. Fill out the Frame Shop Action Log"], ans: ["c"] },
+        { id: 30, text: "To check-in custom frames on Freight days, you should verify", options: ["a. The size of the frame", "b. The moulding number", "c. The qty ordered", "d. The condition of the moulding", "e. All of these should be verified"], ans: ["e"] },
+        { id: 31, text: "What can happen if you don’t check-in the custom frames properly?", options: ["a. You may not notice a problem until you’re putting it together", "b. An order may not be completed on time", "c. You may have to wait an additional week to transmit a replacement order", "d. All of these"], ans: ["d"] },
+        { id: 32, text: "How should you send back the custom frame boxes?", options: ["a. They should be empty", "b. They should be taped up", "c. They should be full of foam and not taped", "d. The foam should be removed and they should be broken down"], ans: ["c"] },
+        { id: 33, text: "Which of these should you NOT do to send back the custom frame boxes?", options: ["a. Take the foam out of the boxes", "b. Tape the box and lid shut", "c. Break down the boxes", "d. None of the above"], ans: ["d"] },
+        { id: 34, text: "Which of these should you verify when checking-in Custom Mats?", options: ["a. The condition of the mats", "b. The Item #", "c. The Qty you received", "d. All of these"], ans: ["d"] },
+        { id: 35, text: "What step is the bulk of the work involved in the Custom Framing Process?", options: ["a. Calling the customer", "b. Storing the artwork", "c. Prepping the orders", "d. Finishing orders"], ans: ["c"] },
+        { id: 36, text: "What is the most efficient method for working with multiple, similar orders?", options: ["a. Prepping and fitting in small batches", "b. Fitting and Finishing orders individually", "c. Prepping individually", "d. None of these"], ans: ["a"] },
+        { id: 37, text: "What does “Prepping” an order entail?", options: ["a. Mats and substrate are cut", "b. Glazing is cut", "c. Artwork is hinged/mounted", "d. All of these"], ans: ["d"] },
+        { id: 38, text: "The “Preservation Framing” fee requires what type of mats?", options: ["a. A double mat cut from Museum Rag Mats", "b. Fancy Cut Art and Templates", "c. Mats are encouraged but not required."], ans: ["a"] },
+        { id: 39, text: "Mounting Strips should be used as the primary support for the piece", options: ["a. True, the strips at the bottom will support the weight of the piece", "b. False, they are secondary backup support for taped hinges"], ans: ["b"] },
+        { id: 40, text: "If the piece shouldn’t have tape applied to it, which of the following is appropriate to use?", options: ["a. Spacers", "b. Mounting Strips", "c. Framers Corners"], ans: ["c"] },
+        { id: 41, text: "When prepping a shadowbox, which of these is considered prepped?", options: ["a. You’ve cut the materials", "b. You’ve cut the materials and mounted the items", "c. You’ve cut the materials, mounted the items, and Fit and Finished the shadowbox"], ans: ["b"] },
+        { id: 42, text: "The plastic, Econospace® spacers will protect artwork from damage caused by which of these?", options: ["a. Temperature changes & humidity", "b. Acid & Lignins", "c. Aggressive adhesives", "d. All of these"], ans: ["a"] },
+        { id: 43, text: "An acid-free double-mat will protect the artwork from the damage caused by temperature changes and humidity without the need for spacers.", options: ["a. True", "b. False"], ans: ["a"] },
+        { id: 44, text: "When applying Econospace® spacers, which surface will the adhesive side be adhered to?", options: ["a. The Frame", "b. The mats", "c. The glass", "d. The artwork", "e. None of these"], ans: ["c"] },
+        { 
+            id: 45, 
+            text: "When applying Econospace® spacers, which of the following methods is correct?", 
+            options: ["a. Pinwheel Method (A)", "b. Sides Supported (B)", "c. Top Supported (C)", "d. Overlapping Corners (D)"], 
+            ans: ["c"],
+            diagram: `
+                <svg viewBox="0 0 530 150" width="100%" height="150" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Common Styles -->
+                    <defs>
+                        <style>
+                            .frame-bg { fill: #ffffff; stroke: #334155; stroke-width: 2.5; }
+                            .spacer-dark { fill: #334155; }
+                            .spacer-overlap { fill: #0f172a; opacity: 0.85; }
+                            .label-title { font-family: system-ui, sans-serif; font-size: 11px; font-weight: 500; fill: #1e293b; text-anchor: middle; }
+                            .letter-box { fill: #d1d5db; stroke: #1e293b; stroke-width: 1.5; }
+                            .letter-text { font-family: system-ui, sans-serif; font-size: 13px; font-weight: bold; fill: #0f172a; text-anchor: middle; }
+                        </style>
+                    </defs>
+
+                    <!-- METHOD A: Pinwheel Method -->
+                    <g transform="translate(10, 5)">
+                        <rect x="0" y="0" width="110" height="135" class="frame-bg"/>
+                        <!-- Spacers -->
+                        <rect x="0" y="0" width="100" height="8" class="spacer-dark"/> <!-- Top -->
+                        <rect x="102" y="0" width="8" height="127" class="spacer-dark"/> <!-- Right -->
+                        <rect x="10" y="127" width="100" height="8" class="spacer-dark"/> <!-- Bottom -->
+                        <rect x="0" y="8" width="8" height="127" class="spacer-dark"/> <!-- Left -->
+                        <!-- Labels -->
+                        <text x="55" y="32" class="label-title">Pinwheel</text>
+                        <text x="55" y="46" class="label-title">Method</text>
+                        <rect x="42" y="88" width="26" height="26" class="letter-box"/>
+                        <text x="55" y="105" class="letter-text">A</text>
+                    </g>
+
+                    <!-- METHOD B: Sides Supported -->
+                    <g transform="translate(140, 5)">
+                        <rect x="0" y="0" width="110" height="135" class="frame-bg"/>
+                        <!-- Spacers -->
+                        <rect x="0" y="0" width="110" height="8" class="spacer-dark"/> <!-- Full Top -->
+                        <rect x="0" y="127" width="110" height="8" class="spacer-dark"/> <!-- Full Bottom -->
+                        <rect x="0" y="8" width="8" height="119" class="spacer-dark"/> <!-- Inner Left -->
+                        <rect x="102" y="8" width="8" height="119" class="spacer-dark"/> <!-- Inner Right -->
+                        <!-- Labels -->
+                        <text x="55" y="32" class="label-title">Sides</text>
+                        <text x="55" y="46" class="label-title">Supported</text>
+                        <rect x="42" y="88" width="26" height="26" class="letter-box"/>
+                        <text x="55" y="105" class="letter-text">B</text>
+                    </g>
+
+                    <!-- METHOD C: Top Supported -->
+                    <g transform="translate(270, 5)">
+                        <rect x="0" y="0" width="110" height="135" class="frame-bg"/>
+                        <!-- Spacers -->
+                        <rect x="0" y="0" width="8" height="135" class="spacer-dark"/> <!-- Full Left -->
+                        <rect x="102" y="0" width="8" height="135" class="spacer-dark"/> <!-- Full Right -->
+                        <rect x="8" y="0" width="94" height="8" class="spacer-dark"/> <!-- Inner Top -->
+                        <rect x="8" y="127" width="94" height="8" class="spacer-dark"/> <!-- Inner Bottom -->
+                        <!-- Labels -->
+                        <text x="55" y="32" class="label-title">Top</text>
+                        <text x="55" y="46" class="label-title">Supported</text>
+                        <rect x="42" y="88" width="26" height="26" class="letter-box"/>
+                        <text x="55" y="105" class="letter-text">C</text>
+                    </g>
+
+                    <!-- METHOD D: Overlapping Corners -->
+                    <g transform="translate(400, 5)">
+                        <rect x="0" y="0" width="110" height="135" class="frame-bg"/>
+                        <!-- Spacers -->
+                        <rect x="0" y="0" width="110" height="8" class="spacer-dark"/> <!-- Full Top -->
+                        <rect x="0" y="127" width="110" height="8" class="spacer-dark"/> <!-- Full Bottom -->
+                        <rect x="0" y="0" width="8" height="135" class="spacer-dark"/> <!-- Full Left -->
+                        <rect x="102" y="0" width="8" height="135" class="spacer-dark"/> <!-- Full Right -->
+                        <!-- Darker Overlaps at Corners -->
+                        <rect x="0" y="0" width="8" height="8" class="spacer-overlap"/>
+                        <rect x="102" y="0" width="8" height="8" class="spacer-overlap"/>
+                        <rect x="0" y="127" width="8" height="8" class="spacer-overlap"/>
+                        <rect x="102" y="127" width="8" height="8" class="spacer-overlap"/>
+                        <!-- Labels -->
+                        <text x="55" y="32" class="label-title">Overlapping</text>
+                        <text x="55" y="46" class="label-title">Corners</text>
+                        <rect x="42" y="88" width="26" height="26" class="letter-box"/>
+                        <text x="55" y="105" class="letter-text">D</text>
+                    </g>
+                </svg>
+            `
+        },
+        { id: 46, text: "Drymounting may be a good option for", options: ["a. Diplomas and certificates", "b. Replaceable signs and posters", "c. Limited edition prints", "d. All of these"], ans: ["b"] },
+        { id: 47, text: "Drymounting is not a good option for", options: ["a. Delicate items", "b. Heat-sensitive inks", "c. Original art and Needleart", "d. Anything valuable/difficult to replace", "e. All of these"], ans: ["e"] },
+        { id: 48, text: "What goes between the poster and the lid when drymounting?", options: ["a. Adhesive", "b. Both release paper AND release board", "c. Either release paper OR release board", "d. None of these"], ans: ["c"] },
+        { 
+            id: 49, 
+            text: "At which of these points should you tack a poster in place before drymounting?", 
+            options: ["a. A", "b. B", "c. C", "d. D"], 
+            ans: ["d"],
+            diagram: `
+                <svg viewBox="0 0 400 200" width="100%" height="200" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Outer Substrate Board -->
+                    <rect x="10" y="10" width="380" height="180" fill="#ffffff" stroke="#1e293b" stroke-width="2.5"/>
+                    
+                    <!-- Inner Poster / Artwork -->
+                    <rect x="30" y="28" width="320" height="134" fill="#cbd5e1" stroke="#334155" stroke-width="1.5"/>
+                    
+                    <!-- Point A (Centered on Left Border) -->
+                    <g transform="translate(30, 95)">
+                        <rect x="-13" y="-13" width="26" height="26" fill="#94a3b8" stroke="#0f172a" stroke-width="1.5"/>
+                        <text x="0" y="5" font-family="system-ui, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#0f172a">A</text>
+                    </g>
+
+                    <!-- Point B (Inside Artwork, Center-Right) -->
+                    <g transform="translate(230, 95)">
+                        <rect x="-13" y="-13" width="26" height="26" fill="#94a3b8" stroke="#0f172a" stroke-width="1.5"/>
+                        <text x="0" y="5" font-family="system-ui, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#0f172a">B</text>
+                    </g>
+
+                    <!-- Point C (Bottom-Left Corner of Poster) -->
+                    <g transform="translate(30, 162)">
+                        <rect x="-13" y="-13" width="26" height="26" fill="#94a3b8" stroke="#0f172a" stroke-width="1.5"/>
+                        <text x="0" y="5" font-family="system-ui, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#0f172a">C</text>
+                    </g>
+
+                    <!-- Point D (Centered on Bottom Border, Center-Right) -->
+                    <g transform="translate(230, 162)">
+                        <rect x="-13" y="-13" width="26" height="26" fill="#94a3b8" stroke="#0f172a" stroke-width="1.5"/>
+                        <text x="0" y="5" font-family="system-ui, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#0f172a">D</text>
+                    </g>
+                </svg>
+            `
+        },
+        { id: 50, text: "When Shrinkwrapping a customer’s artwork, you should include which of the following?", options: ["a. Regular Foamboard", "b. Acid Free Foamboard", "c. A single mat", "d. B & C only"], ans: ["a"] },
+        { id: 51, text: "When shrinkwrapping a customer’s artwork, you should cut the foamboard so that it is...?", options: ["a. The size of the art", "b. The size of the matboard", "c. ¼″ larger than art or mat", "d. ¾″ larger than art or mat"], ans: ["c"] },
+        { id: 52, text: "Which mounting method can be used to mount a Doily or Shadowbox item to a matboard?", options: ["a. Couching", "b. Lacing", "c. Stretching"], ans: ["a"] },
+        { id: 53, text: "Which mounting method can be used to mount a cross-stitch or similar needleart piece around a foamboard?", options: ["a. Couching", "b. Lacing", "c. Stretching"], ans: ["b"] },
+        { id: 54, text: "Which mounting method is also used for the majority of shadowboxes?", options: ["a. Couching", "b. Lacing", "c. Stretching"], ans: ["a"] },
+        { id: 55, text: "Which mounting method should you use to mount a jersey?", options: ["a. Couching", "b. Lacing", "c. Stretching"], ans: ["a"] },
+        { id: 56, text: "When stretching a canvas that is valuable or fragile, you should line the stretcher bar and frame with...?", options: ["a. Acid Free tape", "b. Artist tape", "c. Frame Sealing Tape", "d. None of these"], ans: ["c"] },
+        { id: 57, text: "When stretching a canvas, after placing the center staples, the rest of them should be placed...", options: ["a. Horizontally", "b. Vertically", "c. Diagonally", "d. None of these"], ans: ["c"] },
+        { id: 58, text: "What should you do with the excess canvas in the corners?", options: ["a. Cut the excess fabric off", "b. Fold it neatly", "c. Cut a slit to help fold it", "d. None of these"], ans: ["b"] },
+        { id: 59, text: "What is the Silicone Glue used for?", options: ["a. Some Shadowboxes", "b. Mounting Mirrors", "c. Attaching Fillets", "d. All of these"], ans: ["b"] },
+        { id: 60, text: "When prepping shadowboxes, which of these mounting methods is NOT allowed?", options: ["a. Couching", "b. Gluing", "c. Hinging", "d. Lacing"], ans: ["b"] },
+        { id: 61, text: "Which method for folding an American flag produces the straightest star pattern?", options: ["a. Traditional fold", "b. False fold", "c. Gallery wrap", "d. None of these"], ans: ["b"] },
+        { id: 62, text: "Which method for folding an American flag is most commonly used, but creates an uneven star pattern?", options: ["a. Traditional fold", "b. False fold", "c. Gallery wrap", "d. None of these"], ans: ["a"] },
+        { id: 63, text: "When installing a mat in the front of a shadowbox, how much foamboard will you need in order to support the mat", options: ["a. One layer, stapled behind the mat", "b. Several layers, since you have to build it up with foam"], ans: ["a"] },
+        { id: 64, text: "Offset clips are available in sizes up to...", options: ["a. ⅜″", "b. ½″", "c. ¾″", "d. 1″"], ans: ["b"] },
+        { id: 65, text: "What should you do if the offset clips and brad nails aren’t long enough to attach two stacked frames?", options: ["a. Make your own clips out of strap hangers", "b. Use straps made from strips of canvas or leather", "c. Heavy-Duty picture hanging wire", "d. Any of these can work", "e. Call the customer to select a different frame."], ans: ["e"] },
+        { id: 66, text: "An order is considered PAST DUE if it is not completed by...", options: ["a. The time the store opens on its due date", "b. The time the customer arrives", "c. The time the store closes", "d. The day after the due date"], ans: ["a"] },
+        { id: 67, text: "What is the formula for calculating United Inches?", options: ["a. Frame Width + Height", "b. Frame Width x Height", "c. Frame Width x Height x 2", "d. Window Width x Height + 4″"], ans: ["a"] },
+        { id: 68, text: "How many United Inches is an 11x14 photo that is being framed in a 16x20 Frame?", options: ["a. 25", "b. 36", "c. 61", "d. 72"], ans: ["b"] },
+        { id: 69, text: "What additional product are you required to make when prepping a jersey?", options: ["a. A couching template", "b. A jersey form", "c. A mounting sleeve", "d. A jersey hanger"], ans: ["b"] },
+        { id: 70, text: "In the mat corner sample rack, which mats are the ones that we carry in the art dept?", options: ["a. The samples with rounded corners", "b. The samples with notches", "c. The samples at the front", "d. We don’t have the art dept mats in the mat corner sample rack."], ans: ["b"] },
+        { id: 71, text: "Your customer needs a mat with an opening for their poster frame, how much should you charge for the art department mats?", options: ["a. The retail price on the mat, plus 4 cutting fees", "b. The retail price on the mat, @ 50% off since it’s going into a frame", "c. The price listed on the United Inch price chart based on the frame size", "d. None of these are correct"], ans: ["c"] },
+        { id: 72, text: "Most walk in customers that are sold custom-order mats would actually prefer to select a different mat and have it finished now, rather than to wait two weeks for the other mat.", options: ["a. True", "b. False"], ans: ["a"] },
+        { id: 73, text: "What is the price of a 34 x 66 mat (Price Group B), cut with an opening?", options: ["a. $11.99", "b. $13.99", "c. $40.00", "d. A mat isn’t available that size"], ans: ["d"] },
+        { id: 74, text: "What is the maximum size of the glass we carry?", options: ["a. 24x36", "b. 32x40", "c. 36x48", "d. 40x60"], ans: ["c"] },
+        { id: 75, text: "What is the largest size that we can drymount?", options: ["a. 24x36", "b. 32x40", "c. 36x48", "d. 40x60"], ans: ["d"] },
+        { id: 76, text: "When using customer’s glass, it is okay to cut it down to fit in the frame.", options: ["a. True", "b. False"], ans: ["b"] },
+        { id: 77, text: "Should you apply a discount to a frame that has a “Your Price” label?", options: ["a. Yes", "b. No"], ans: ["b"] },
+        { id: 78, text: "If your customer wants you to remove a picture from their frame and fit it into the wall frame they’ve selected (from Hobby Lobby); which of these fees should you add to the ticket?", options: ["a. Refit fee", "b. Sizing fee", "c. None of these"], ans: ["c"] },
+        { id: 79, text: "If your customer wants you to cut a mat and fit their diploma into a document-frame they brought from home, which of these fees should you also add to the ticket (assuming the frame is structurally sound)?", options: ["a. Sectional assembly fee", "b. Refit fee", "c. Sizing fee", "d. None of these"], ans: ["b"] },
+        { id: 80, text: "Your customer asks you to cut a 32x40 matboard down into four 16x20 mat blanks; at $2.00 apiece, how much will the sizing fee be?", options: ["a. $2.00 (1 cut)", "b. $6.00 (3 cuts)", "c. $8.00 (4 cuts)", "d. None of these are correct"], ans: ["b"] },
+        { id: 81, text: "If the 40x60 size of a matboard is listed as “out of Stock” but the 32x40 size is not, what should you do with the corner sample?", options: ["a. Put the sample in the drawer", "b. Use a sharpie to mark out the 40x60 size", "c. Temporarily cover the 40x60 number & barcode", "d. Put the 40x60 sample in the drawer and leave the 32x40 one on the rack"], ans: ["c"] },
+        { id: 82, text: "The glass trashcan should be emptied frequently so that it does not exceed ____.", options: ["a. 8″ full", "b. 12″ full", "c. ½ full", "d. ¾ full"], ans: ["a"] },
+        { id: 83, text: "What is necessary in order to trim a customer’s artwork?", options: ["a. Precise instructions about the size it should be trimmed to", "b. Directions about what part of the art will be cut off", "c. A second customer signature in the trim artwork authorization section", "d. All of these are required"], ans: ["d"] },
+        { id: 84, text: "What should you do if the order you are prepping needs to be trimmed, but the customer did NOT sign the trim artwork authorization section?", options: ["a. If it has clear instructions, you can trim it anyway", "b. Work with your customer to determine a time that is convenient for both of you so that they can return to sign the authorization, and have the piece completed in one visit.", "c. The customer’s signature at the bottom of the ticket is sufficient, you may trim it"], ans: ["b"] },
+        { id: 85, text: "Which of these materials is NOT necessary for the Direct Contact Overlay mounting method?", options: ["a. Tulle", "b. Batting", "c. Unbleached muslin", "d. Thread"], ans: ["d"] },
+        { id: 86, text: "How do you attach a shadowbox frame to a shadowbox extender?", options: ["a. Offset clips", "b. Screwing strap hangers to each side", "c. Wood glue and brad nails", "d. Any of these are acceptable"], ans: ["c"] },
+        { id: 87, text: "Which of the following methods should be used to mount a golf ball in a shadowbox?", options: ["a. Direct Contact Overlay", "b. Tulle Wrapping", "c. Silicone glue", "d. Sling Mount", "e. Wrap Mount"], ans: ["b"] },
+        { id: 88, text: "Which of the following methods should be used to support a magazine?", options: ["a. Direct Contact Overlay", "b. Tulle Wrapping", "c. Silicone glue", "d. Sling Mount", "e. Wrap Mount"], ans: ["d"] },
+        { id: 89, text: "Which of the following methods should be used to mount a very fragile needleart that cannot be laced or couched?", options: ["a. Direct Contact Overlay", "b. Tulle Wrapping", "c. Silicone glue", "d. Sling Mount", "e. Wrap Mount"], ans: ["a"] },
+        { id: 90, text: "Which of the following should NEVER be used to mount your customer’s artwork and shadowbox items? (Select all that apply)", options: ["a. ATG/ATT (Adhesive Transfer Tape)", "b. Buffer Mount", "c. Hinging tape", "d. Mounting Strips", "e. Photo Corners", "f. One-Step Board", "g. Thread", "h. Glues", "i. Masking Tape", "j. Tulle", "k. These are all approved to use"], ans: ["a", "h", "i"], multi: true },
+        { id: 91, text: "If a customer wants to leave and pick up their order later, you should:", options: ["a. Write the customer’s name and phone number on the Walk-In ticket.", "b. Write the ticket in the IFRM, even if it is only in-stock materials.", "c. This is not allowed."], ans: ["b"] },
+        { id: 92, text: "If a customer selects an in-stock frame but a custom mat that you don’t have a scrap for, you should:", options: ["a. Treat it like a custom order, and order a new mat.", "b. Offer a few alternates for scraps that you do have, so you can finish the order today before offering to order the mat."], ans: ["b"] },
+        { id: 93, text: "Using mat scraps for walk in orders will:", options: ["a. Make your frame shop more profitable.", "b. Decrease the number of orders you’ll need to prep and finish later.", "c. Make your customer happier since they won’t have to wait.", "d. All of these"], ans: ["d"] },
+        { id: 94, text: "If a customer selects a frame that has a sticker on it that says “Do not hang with wire”, you should:", options: ["a. Use your best judgement, a wire might be ok after all", "b. Tell them they’ll have to install the wire themselves", "c. Help them choose a different hanger that will work, without a wire.", "d. Put wire on the existing d-rings"], ans: ["c"] },
+        { id: 95, text: "When should Employee orders be approved/initialed by a manager?", options: ["a. When the order is placed, to verify all necessary materials have been added to the ticket.", "b. When the order is picked up, to ensure the materials charged for, are the ones that were used on the piece.", "c. Both, when the order is placed and when it is picked up"], ans: ["c"] },
+        { id: 96, text: "How will managers know they should come check an employee order?", options: ["a. The framer writing the ticket should page them", "b. The managers will just know", "c. The CSM will inform them"], ans: ["a"] },
+        { id: 97, text: "Are you allowed to write a ticket for yourself?", options: ["a. Yes", "b. No"], ans: ["b"] },
+        { id: 98, text: "All employee orders must be written in the IFRM, including Walk In Orders.", options: ["a. True", "b. False"], ans: ["a"] },
+        { id: 99, text: "Employees may write tickets for their friends and family members", options: ["a. True, they should be treated like any other customer", "b. False, they should be written by another framer or manager"], ans: ["b"] },
+        { id: 100, text: "You should contact your customer to...", options: ["a. Check on any questions you may have with their order", "b. Inform them of any problems or delays with their order.", "c. Inform them that their order is completed and ready to be picked up.", "d. Remind them every couple of weeks that it is ready for them.", "e. All of the above, constant communication is key to preventing customer service complaints"], ans: ["e"] }
+    ];
+
+    function initQuiz() {
+        const container = document.getElementById('mc-container');
+        questions.forEach(q => {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+            card.id = `q-card-${q.id}`;
+            
+            let optionsHTML = q.options.map(opt => {
+                const optVal = opt.charAt(0);
+                const inputType = q.multi ? 'checkbox' : 'radio';
+                const inputName = q.multi ? `q${q.id}_${optVal}` : `q${q.id}`;
+                return `
+                    <label class="option-label">
+                        <input type="${inputType}" name="${inputName}" value="${optVal}" data-qid="${q.id}">
+                        ${opt}
+                    </label>
+                `;
+            }).join('');
+
+            const displayAns = q.ans.join(', ').toUpperCase();
+
+            let diagramHTML = '';
+            if (q.diagram) {
+                diagramHTML = `<div class="diagram-container">${q.diagram}</div>`;
+            }
+
+            card.innerHTML = `
+                <div class="question-text">${q.id}. ${q.text}</div>
+                ${diagramHTML}
+                <div class="options-list">${optionsHTML}</div>
+                <div class="feedback">Correct Answer: ${displayAns}</div>
+            `;
+            container.appendChild(card);
+        });
+
+        const form = document.getElementById('quiz-form');
+        form.addEventListener('input', saveState);
+        form.addEventListener('change', saveState);
+
+        loadState();
+    }
+
+    function saveState() {
+        const state = {};
+
+        questions.forEach(q => {
+            if (q.multi) {
+                const checked = [];
+                q.options.forEach(opt => {
+                    const optVal = opt.charAt(0);
+                    const el = document.querySelector(`input[name="q${q.id}_${optVal}"]`);
+                    if (el && el.checked) checked.push(optVal);
+                });
+                state[`q${q.id}`] = checked;
+            } else {
+                const selected = document.querySelector(`input[name="q${q.id}"]:checked`);
+                if (selected) state[`q${q.id}`] = selected.value;
+            }
+        });
+
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function loadState() {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (!saved) return;
+
+        try {
+            const state = JSON.parse(saved);
+
+            questions.forEach(q => {
+                const val = state[`q${q.id}`];
+                if (!val) return;
+
+                if (q.multi && Array.isArray(val)) {
+                    val.forEach(optVal => {
+                        const cb = document.querySelector(`input[name="q${q.id}_${optVal}"]`);
+                        if (cb) cb.checked = true;
+                    });
+                } else if (!q.multi) {
+                    const radio = document.querySelector(`input[name="q${q.id}"][value="${val}"]`);
+                    if (radio) radio.checked = true;
+                }
+            });
+        } catch (e) {
+            console.error("Could not load saved test answers:", e);
+        }
+    }
+
+    function gradeQuiz() {
+        let score = 0;
+
+        questions.forEach(q => {
+            const card = document.getElementById(`q-card-${q.id}`);
+            card.classList.remove('correct', 'incorrect');
+
+            if (q.multi) {
+                const selected = [];
+                q.options.forEach(opt => {
+                    const optVal = opt.charAt(0);
+                    const el = document.querySelector(`input[name="q${q.id}_${optVal}"]`);
+                    if (el && el.checked) selected.push(optVal);
+                });
+
+                const isCorrect = q.ans.length === selected.length && q.ans.every(val => selected.includes(val));
+                if (isCorrect) {
+                    score++;
+                    card.classList.add('correct');
+                } else {
+                    card.classList.add('incorrect');
+                }
+            } else {
+                const selected = document.querySelector(`input[name="q${q.id}"]:checked`);
+                if (selected && q.ans.includes(selected.value)) {
+                    score++;
+                    card.classList.add('correct');
+                } else {
+                    card.classList.add('incorrect');
+                }
+            }
+        });
+
+        const scoreBoard = document.getElementById('score-board');
+        const scoreText = document.getElementById('score-text');
+        const scorePercentage = document.getElementById('score-percentage');
+        const passStatus = document.getElementById('pass-status');
+
+        const pct = Math.round((score / 100) * 100);
+        scoreText.textContent = `Your Score: ${score} / 100`;
+        scorePercentage.textContent = `${pct}%`;
+
+        if (score >= 90) {
+            passStatus.textContent = "PASSED";
+            passStatus.className = "pass-badge pass";
+        } else {
+            passStatus.textContent = "FAILED (90/100 required)";
+            passStatus.className = "pass-badge fail";
+        }
+
+        scoreBoard.style.display = 'block';
+        scoreBoard.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function resetQuiz() {
+        localStorage.removeItem(STORAGE_KEY);
+        document.getElementById('quiz-form').reset();
+        document.querySelectorAll('.question-card').forEach(card => {
+            card.classList.remove('correct', 'incorrect');
+        });
+        document.getElementById('score-board').style.display = 'none';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    window.onload = initQuiz;
+</script>
+
+</body>
+</html>
