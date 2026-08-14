@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frame Shop Certification Practice Test</title>
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --primary-hover: #1d4ed8;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #0f172a;
+            --border: #e2e8f0;
+            --success: #16a34a;
+            --error: #dc2626;
+            --success-bg: #f0fdf4;
+            --error-bg: #fef2f2;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 24px;
+            border: 1px solid var(--border);
+        }
+
+        h1 {
+            margin: 0 0 12px 0;
+            color: var(--primary);
+            font-size: 1.8rem;
+        }
+
+        .instructions {
+            font-size: 0.95rem;
+            color: #475569;
+            background: #f1f5f9;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .section {
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 24px;
+            border: 1px solid var(--border);
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 8px;
+            margin-bottom: 20px;
+        }
+
+        .question-card {
+            margin-bottom: 20px;
+            padding: 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .question-text {
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.15s ease;
+        }
+
+        .option-label:hover {
+            background-color: #f8fafc;
+        }
+
+        .option-label input {
+            margin-right: 12px;
+        }
+
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .input-group label {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .input-group input {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        .ruler-container {
+            width: 100%;
+            overflow-x: auto;
+            background: #fff;
+            padding: 10px 0;
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+        }
+
+        .question-card.correct {
+            border-color: var(--success);
+            background-color: var(--success-bg);
+        }
+
+        .question-card.incorrect {
+            border-color: var(--error);
+            background-color: var(--error-bg);
+        }
+
+        .feedback {
+            margin-top: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .correct .feedback {
+            display: block;
+            color: var(--success);
+        }
+
+        .incorrect .feedback {
+            display: block;
+            color: var(--error);
+        }
+
+        .controls {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        button.reset-btn {
+            background-color: #64748b;
+        }
+
+        button.reset-btn:hover {
+            background-color: #475569;
+        }
+
+        #score-board {
+            display: none;
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px solid var(--primary);
+            margin-top: 24px;
+            text-align: center;
+        }
+
+        #score-board h2 {
+            margin: 0 0 8px 0;
+        }
+
+        .pass-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-weight: bold;
+            color: white;
+            margin-top: 8px;
+        }
+
+        .pass { background-color: var(--success); }
+        .fail { background-color: var(--error); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Frame Shop Certification Practice Test</h1>
+        <div class="instructions">
+            <strong>Section 1: Frame Shop Manual Training</strong><br>
+            Select or enter the best answer for each question. Your answers are saved automatically as you work. A score of <strong>45/50 (90%)</strong> or higher is required to pass.
+        </div>
+    </header>
+
+    <form id="quiz-form">
+        <!-- Multiple Choice Section -->
+        <div class="section">
+            <div class="section-title">Multiple Choice Questions (1–16)</div>
+            <div id="mc-container"></div>
+        </div>
+
+        <!-- Ruler Section -->
+        <div class="section">
+            <div class="section-title">Ruler Measurements Section</div>
+            <p>Reference the detailed ruler diagram below to determine measurements for points A through H.</p>
+            
+            <div class="ruler-container">
+                <svg id="ruler-svg" viewBox="0 0 800 120" width="100%" height="120" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Base Ruler Body -->
+                    <rect x="10" y="50" width="780" height="60" fill="#f8fafc" stroke="#334155" stroke-width="2"/>
+                    
+                    <!-- Dynamic Ticks Group -->
+                    <g id="ruler-ticks" stroke="#334155"></g>
+
+                    <!-- Point Markers A - H -->
+                    <g transform="translate(160, 15)">
+                        <path d="M -10 -15 L 10 -15 L 10 5 L 0 15 L -10 5 Z" fill="#1e3a8a"/>
+                        <text x="0" y="-2" font-family="sans-serif" font-size="11" font-weight="bold" text-anchor="middle" fill="#fff">A</text>
+                        <line x1="0" y1="15" x2="0" y2="35" stroke="#1e3a8a" stroke-width="2"/>
+                    </g>
+                    <g transform="translate(220, 15)">
+                        <path d="M -10 -15 L 10 -15 L 10 5 L 0 15 L -10 5 Z" fill="#1e3a8a"/>
+                        <text x="0" y="-2" font-family="sans-serif" font-size="11" font-weight="bold" text-anchor="middle" fill="#fff">B</text>
+                        <line x1="0" y1="15" x2="0" y2="35" stroke="#1e3a8a" stroke-width="2"/>
+                    </g>
+                    <g transform="translate(295, 15)">
+                        <path d="M -10 -15 L 10 -15 L 10 5 L 0 15 L -10 5 Z" fill="#1e3a8a"/>
+                        <text x="0" y="-2" font-family="sans-serif" font-size="11" font-weight="bold" text-anchor="middle" fill="#fff">C</text>
+                        <line x1="0" y1="15" x2="0" y2="35" stroke="#1e3a8a" stroke-width="2"/>
+                    </g>
+                    <g transform="translate(385, 15)">
+                        <path d="M -10 -15 L 10 -15 L 10 5 L 0 15 L -10 5 Z" fill="#1e3a8a"/>
+                        <text x="0" y="-2" font-family="sans-serif" font-size="11" font-weight="bold" text-anchor="middle" fill="#fff">D</text>
+                        <line x1="0" y1="15" x2="0" y2="35" stroke="#1e3a8a" stroke-width="2"/>
+                    </g>
+                    <g transform="translate(565, 15)">
+                        <path d="M -10 -15 L 10 -15 L 10 5 L 0 15 L -10 5 Z" fill="#1e3a8a"/>
+                        <text x="0" y="-2" font-family="sans-serif" font-size="11" font-weight="bold" text-anchor="middle" fill="#fff">E</text>
+                        <line x1="0" y1="15" x2="0" y2="35" stroke="#1e3a8a" stroke-width="2"/>
+                    </g>
+                    <g transform="translate(595, 15)">
+                        <path d="M -10 -15 L 10 -15 L 10 5 L 0 15 L -10 5 Z" fill="#1e3a8a"/>
+                        <text x="0" y="-2" font-family="sans-serif" font-size="11" font-weight="bold" text-anchor="middle" fill="#fff">F</text>
+                        <line x1="0" y1="15" x2="0" y2="35" stroke="#1e3a8a" stroke-width="2"/>
+                    </g>
+                    <g transform="translate(670, 15)">
+                        <path d="M -10 -15 L 10 -15 L 10 5 L 0 15 L -10 5 Z" fill="#1e3a8a"/>
+                        <text x="0" y="-2" font-family="sans-serif" font-size="11" font-weight="bold" text-anchor="middle" fill="#fff">G</text>
+                        <line x1="0" y1="15" x2="0" y2="35" stroke="#1e3a8a" stroke-width="2"/>
+                    </g>
+                    <g transform="translate(730, 15)">
+                        <path d="M -10 -15 L 10 -15 L 10 5 L 0 15 L -10 5 Z" fill="#1e3a8a"/>
+                        <text x="0" y="-2" font-family="sans-serif" font-size="11" font-weight="bold" text-anchor="middle" fill="#fff">H</text>
+                        <line x1="0" y1="15" x2="0" y2="35" stroke="#1e3a8a" stroke-width="2"/>
+                    </g>
+                </svg>
+            </div>
+
+            <h3>Part 1: Fraction Form (Questions 17–24)</h3>
+            <p><small>Format example: <code>11 1/2</code> or <code>11</code></small></p>
+            <div class="input-grid" id="fractions-container"></div>
+
+            <h3 style="margin-top: 24px;">Part 2: Decimal Form (Questions 25–32)</h3>
+            <p><small>Format example: <code>11.5</code></small></p>
+            <div class="input-grid" id="decimals-container"></div>
+        </div>
+
+        <!-- Math Section -->
+        <div class="section">
+            <div class="section-title">Math Section (Questions 33–39)</div>
+            <div class="input-grid" id="math-container"></div>
+        </div>
+
+        <!-- Proficiency Verification -->
+        <div class="section">
+            <div class="section-title">Proficiency Checklist Acknowledgment (Questions 40–50)</div>
+            <p>Confirm understanding/ability for hands-on evaluation items:</p>
+            <div id="checklist-container"></div>
+        </div>
+
+        <div class="controls">
+            <button type="button" onclick="gradeQuiz()">Submit & Grade</button>
+            <button type="button" class="reset-btn" onclick="resetQuiz()">Reset Test</button>
+        </div>
+    </form>
+
+    <div id="score-board">
+        <h2 id="score-text">Your Score: 0 / 50</h2>
+        <div id="score-percentage" style="font-size: 1.2rem; margin-bottom: 8px;">0%</div>
+        <div id="pass-status" class="pass-badge">STATUS</div>
+    </div>
+</div>
+
+<script>
+    const STORAGE_KEY = 'frameShopQuizAnswers';
+
+    const mcQuestions = [
+        { id: 1, text: "What is the process of assembling a frame package (frame, glass, mats, and substrate) called?", options: ["a. Finishing", "b. Fitting", "c. Hinging", "d. Framing"], ans: "b" },
+        { id: 2, text: "What PPE is required when handling glass?", options: ["a. Glass gloves", "b. Nylon gloves", "c. Safety eyewear", "d. A & C"], ans: "d" },
+        { id: 3, text: "When using glass cleaner, spray the cleaner...", options: ["a. Directly on the glass", "b. On the artwork", "c. On the towel", "d. On the frame"], ans: "c" },
+        { id: 4, text: "You are required to wear Cotton or Nylon gloves when touching and handling...", options: ["a. Photographs", "b. Original paintings", "c. Cheap posters", "d. All of these"], ans: "d" },
+        { id: 5, text: "To hinge art to a mat, how much hinging tape should touch the artwork, per hinge?", options: ["a. 1/4\"", "b. 1/2\"", "c. 1\"", "d. It depends on the size of the art"], ans: "a" },
+        { id: 6, text: "Should you add tape to the bottom or sides of the artwork?", options: ["a. Yes", "b. No, that would cause it to wrinkle more over time"], ans: "b" },
+        { id: 7, text: "Do prescription glasses offer adequate protection when handling glass?", options: ["a. Yes", "b. No"], ans: "b" },
+        { id: 8, text: "What should you do first after securing the assembly into the frame?", options: ["a. Look for dust and debris inside that may have become dislodged", "b. Add the dust cover", "c. Install the hanger", "d. Clean the glass"], ans: "a" },
+        { id: 9, text: "What is the correct way to install wire hangers?", options: ["a. At a 45° angle", "b. At a 30° angle", "c. 15° angle", "d. As tight as possible"], ans: "b" },
+        { id: 10, text: "Which of these hangers are mounted vertically, without wire?", options: ["a. Sawtooth", "b. Regular strap-hangers", "c. Heavy-Duty Triple-Strap Hangers", "d. Offset Clips"], ans: "c" },
+        { id: 11, text: "Which hangers are used to install a wire on a fairly lightweight frame?", options: ["a. Wall Buddies", "b. Strap Hangers", "c. Mighty Hangers", "d. Heavy-Duty Triple-Strap Hangers", "e. None of these"], ans: "b" },
+        { id: 12, text: "Which hanger would you use to install a wire on a moderately heavy (medium-weight) frame?", options: ["a. Wall Buddies", "b. Strap Hangers", "c. Mighty Hangers", "d. Heavy-Duty Triple-Strap Hangers", "e. None of these"], ans: "c" },
+        { id: 13, text: "Can you use wire on a large, very heavy frame?", options: ["a. Yes", "b. No, a large heavy frame should not have a wire installed"], ans: "b" },
+        { id: 14, text: "What is required every time you step away from the PC(s) in the frame dept.?", options: ["a. Turn off the PC", "b. Turn off the monitor", "c. Change the password", "d. Lock the PC"], ans: "d" },
+        { id: 15, text: "When should you turn off the PC?", options: ["a. When the store closes", "b. Every other night", "c. Each Saturday night", "d. Only if instructed to do so by Tech Support Personnel"], ans: "d" },
+        { id: 16, text: "Assuming you're scoring the correct side, what does it mean if the glass wheel skips as you score the glass?", options: ["a. You don't have a glass wheel installed", "b. The pressure is set too high", "c. The wheel is worn and should be replaced", "d. The wheel is installed incorrectly"], ans: "c" }
+    ];
+
+    const rulerFractions = [
+        { id: 17, point: "A", ans: ["11"] },
+        { id: 18, point: "B", ans: ["11 1/2", "11-1/2"] },
+        { id: 19, point: "C", ans: ["12 1/8", "12-1/8"] },
+        { id: 20, point: "D", ans: ["12 7/8", "12-7/8"] },
+        { id: 21, point: "E", ans: ["14 3/8", "14-3/8"] },
+        { id: 22, point: "F", ans: ["14 5/8", "14-5/8"] },
+        { id: 23, point: "G", ans: ["15 1/4", "15-1/4"] },
+        { id: 24, point: "H", ans: ["15 3/4", "15-3/4"] }
+    ];
+
+    const rulerDecimals = [
+        { id: 25, point: "A", ans: "11" },
+        { id: 26, point: "B", ans: "11.5" },
+        { id: 27, point: "C", ans: "12.125" },
+        { id: 28, point: "D", ans: "12.875" },
+        { id: 29, point: "E", ans: "14.375" },
+        { id: 30, point: "F", ans: "14.625" },
+        { id: 31, point: "G", ans: "15.25" },
+        { id: 32, point: "H", ans: "15.75" }
+    ];
+
+    const mathQuestions = [
+        { id: 33, label: "33. 20.5 + 18.5", ans: ["39"] },
+        { id: 34, label: "34. 40.75 - 10.25", ans: ["30.5"] },
+        { id: 35, label: "35. 11.375 + 9.375", ans: ["20.75"] },
+        { id: 36, label: "36. 5 ¾ + 9 ¼", ans: ["15"] },
+        { id: 37, label: "37. 23 ⅜ + 32 ⅛", ans: ["55.5", "55 1/2"] },
+        { id: 38, label: "38. 11 ⅝ - ¼", ans: ["11.375", "11 3/8"] },
+        { id: 39, label: "39. 27 ⅜ - ½", ans: ["26.875", "26 7/8"] }
+    ];
+
+    const checklistItems = [
+        { id: 40, text: "40. Identify Wizard Mat Cutter location" },
+        { id: 41, text: "41. Identify Wall Cutter location" },
+        { id: 42, text: "42. Identify Safety Glasses/Goggles/Gloves" },
+        { id: 43, text: "43. Identify Hardware Kit location" },
+        { id: 44, text: "44. Identify Nylon & Cotton Gloves" },
+        { id: 45, text: "45. Demonstrate safe cutting on Wall Cutter (foamboard & glass)" },
+        { id: 46, text: "46. Demonstrate operation of Wizard Mat Cutter" },
+        { id: 47, text: "47. Demonstrate safe operation of Paper Trimming Knife" },
+        { id: 48, text: "48. Install art with Pendant Hinges (without bare hands)" },
+        { id: 49, text: "49. Safely wrap/bag a completed frame" },
+        { id: 50, text: "50. Update IFRM status upon customer Pickup" }
+    ];
+
+    function drawRulerTicks() {
+        const ticksGroup = document.getElementById('ruler-ticks');
+        if (!ticksGroup) return;
+
+        const startX = 40;
+        const inchWidth = 120;
+        const totalInches = 6;
+        const subdivisions = 16;
+        const totalTicks = totalInches * subdivisions;
+
+        let html = '';
+
+        for (let i = 0; i <= totalTicks; i++) {
+            const x = startX + (i * (inchWidth / subdivisions));
+            let tickHeight = 6;
+            let strokeWidth = 1;
+
+            if (i % 16 === 0) {
+                tickHeight = 32;
+                strokeWidth = 2;
+                const inchNumber = 10 + (i / 16);
+                html += `<text x="${x}" y="105" font-family="sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#0f172a" stroke="none">${inchNumber}</text>`;
+            } else if (i % 8 === 0) {
+                tickHeight = 22;
+                strokeWidth = 1.5;
+            } else if (i % 4 === 0) {
+                tickHeight = 16;
+                strokeWidth = 1.2;
+            } else if (i % 2 === 0) {
+                tickHeight = 10;
+                strokeWidth = 1;
+            }
+
+            html += `<line x1="${x}" y1="50" x2="${x}" y2="${50 + tickHeight}" stroke-width="${strokeWidth}" />`;
+        }
+
+        ticksGroup.innerHTML = html;
+    }
+
+    function initQuiz() {
+        drawRulerTicks();
+
+        // MC
+        const mcContainer = document.getElementById('mc-container');
+        mcQuestions.forEach(q => {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+            card.id = `q-card-${q.id}`;
+            
+            let optionsHTML = q.options.map(opt => {
+                const optVal = opt.charAt(0);
+                return `
+                    <label class="option-label">
+                        <input type="radio" name="q${q.id}" value="${optVal}">
+                        ${opt}
+                    </label>
+                `;
+            }).join('');
+
+            card.innerHTML = `
+                <div class="question-text">${q.id}. ${q.text}</div>
+                <div class="options-list">${optionsHTML}</div>
+                <div class="feedback">Correct Answer: ${q.ans.toUpperCase()}</div>
+            `;
+            mcContainer.appendChild(card);
+        });
+
+        // Fractions
+        const fracContainer = document.getElementById('fractions-container');
+        rulerFractions.forEach(q => {
+            const group = document.createElement('div');
+            group.className = 'question-card input-group';
+            group.id = `q-card-${q.id}`;
+            group.innerHTML = `
+                <label for="q${q.id}">${q.id}: Point ${q.point} (Fraction)</label>
+                <input type="text" id="q${q.id}" placeholder="e.g. 11 1/2">
+                <div class="feedback">Correct: ${q.ans[0]}</div>
+            `;
+            fracContainer.appendChild(group);
+        });
+
+        // Decimals
+        const decContainer = document.getElementById('decimals-container');
+        rulerDecimals.forEach(q => {
+            const group = document.createElement('div');
+            group.className = 'question-card input-group';
+            group.id = `q-card-${q.id}`;
+            group.innerHTML = `
+                <label for="q${q.id}">${q.id}: Point ${q.point} (Decimal)</label>
+                <input type="text" id="q${q.id}" placeholder="e.g. 11.5">
+                <div class="feedback">Correct: ${q.ans}</div>
+            `;
+            decContainer.appendChild(group);
+        });
+
+        // Math
+        const mathContainer = document.getElementById('math-container');
+        mathQuestions.forEach(q => {
+            const group = document.createElement('div');
+            group.className = 'question-card input-group';
+            group.id = `q-card-${q.id}`;
+            group.innerHTML = `
+                <label for="q${q.id}">${q.label}</label>
+                <input type="text" id="q${q.id}" placeholder="Answer">
+                <div class="feedback">Correct: ${q.ans[0]}</div>
+            `;
+            mathContainer.appendChild(group);
+        });
+
+        // Checklist
+        const checkContainer = document.getElementById('checklist-container');
+        checklistItems.forEach(q => {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+            card.id = `q-card-${q.id}`;
+            card.innerHTML = `
+                <label class="option-label">
+                    <input type="checkbox" id="q${q.id}" value="yes">
+                    ${q.text}
+                </label>
+                <div class="feedback">Checklist verification required.</div>
+            `;
+            checkContainer.appendChild(card);
+        });
+
+        // Event listeners for auto-saving state
+        const form = document.getElementById('quiz-form');
+        form.addEventListener('input', saveState);
+        form.addEventListener('change', saveState);
+
+        // Restore saved state if present
+        loadState();
+    }
+
+    function saveState() {
+        const state = {};
+
+        // Multiple Choice (1–16)
+        for (let i = 1; i <= 16; i++) {
+            const selected = document.querySelector(`input[name="q${i}"]:checked`);
+            if (selected) state[`q${i}`] = selected.value;
+        }
+
+        // Text Inputs (17–39)
+        for (let i = 17; i <= 39; i++) {
+            const input = document.getElementById(`q${i}`);
+            if (input) state[`q${i}`] = input.value;
+        }
+
+        // Checkboxes (40–50)
+        for (let i = 40; i <= 50; i++) {
+            const cb = document.getElementById(`q${i}`);
+            if (cb) state[`q${i}`] = cb.checked;
+        }
+
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function loadState() {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (!saved) return;
+
+        try {
+            const state = JSON.parse(saved);
+
+            // Restore Multiple Choice
+            for (let i = 1; i <= 16; i++) {
+                if (state[`q${i}`]) {
+                    const radio = document.querySelector(`input[name="q${i}"][value="${state[`q${i}`]}"]`);
+                    if (radio) radio.checked = true;
+                }
+            }
+
+            // Restore Text Inputs
+            for (let i = 17; i <= 39; i++) {
+                if (state[`q${i}`] !== undefined) {
+                    const input = document.getElementById(`q${i}`);
+                    if (input) input.value = state[`q${i}`];
+                }
+            }
+
+            // Restore Checkboxes
+            for (let i = 40; i <= 50; i++) {
+                if (state[`q${i}`] !== undefined) {
+                    const cb = document.getElementById(`q${i}`);
+                    if (cb) cb.checked = state[`q${i}`];
+                }
+            }
+        } catch (e) {
+            console.error("Could not load saved test answers:", e);
+        }
+    }
+
+    function gradeQuiz() {
+        let score = 0;
+
+        // Grade MC
+        mcQuestions.forEach(q => {
+            const card = document.getElementById(`q-card-${q.id}`);
+            const selected = document.querySelector(`input[name="q${q.id}"]:checked`);
+            card.classList.remove('correct', 'incorrect');
+            
+            if (selected && selected.value === q.ans) {
+                score++;
+                card.classList.add('correct');
+            } else {
+                card.classList.add('incorrect');
+            }
+        });
+
+        // Grade Fractions
+        rulerFractions.forEach(q => {
+            const card = document.getElementById(`q-card-${q.id}`);
+            const val = document.getElementById(`q${q.id}`).value.trim().toLowerCase();
+            card.classList.remove('correct', 'incorrect');
+
+            if (q.ans.some(a => a.toLowerCase() === val)) {
+                score++;
+                card.classList.add('correct');
+            } else {
+                card.classList.add('incorrect');
+            }
+        });
+
+        // Grade Decimals
+        rulerDecimals.forEach(q => {
+            const card = document.getElementById(`q-card-${q.id}`);
+            const val = document.getElementById(`q${q.id}`).value.trim();
+            card.classList.remove('correct', 'incorrect');
+
+            if (val === q.ans) {
+                score++;
+                card.classList.add('correct');
+            } else {
+                card.classList.add('incorrect');
+            }
+        });
+
+        // Grade Math
+        mathQuestions.forEach(q => {
+            const card = document.getElementById(`q-card-${q.id}`);
+            const val = document.getElementById(`q${q.id}`).value.trim().toLowerCase();
+            card.classList.remove('correct', 'incorrect');
+
+            if (q.ans.some(a => a.toLowerCase() === val)) {
+                score++;
+                card.classList.add('correct');
+            } else {
+                card.classList.add('incorrect');
+            }
+        });
+
+        // Grade Checklist
+        checklistItems.forEach(q => {
+            const card = document.getElementById(`q-card-${q.id}`);
+            const checked = document.getElementById(`q${q.id}`).checked;
+            card.classList.remove('correct', 'incorrect');
+
+            if (checked) {
+                score++;
+                card.classList.add('correct');
+            } else {
+                card.classList.add('incorrect');
+            }
+        });
+
+        // Show Results
+        const scoreBoard = document.getElementById('score-board');
+        const scoreText = document.getElementById('score-text');
+        const scorePercentage = document.getElementById('score-percentage');
+        const passStatus = document.getElementById('pass-status');
+
+        const pct = Math.round((score / 50) * 100);
+        scoreText.textContent = `Your Score: ${score} / 50`;
+        scorePercentage.textContent = `${pct}%`;
+
+        if (score >= 45) {
+            passStatus.textContent = "PASSED";
+            passStatus.className = "pass-badge pass";
+        } else {
+            passStatus.textContent = "FAILED (45/50 required)";
+            passStatus.className = "pass-badge fail";
+        }
+
+        scoreBoard.style.display = 'block';
+        scoreBoard.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function resetQuiz() {
+        localStorage.removeItem(STORAGE_KEY);
+        document.getElementById('quiz-form').reset();
+        document.querySelectorAll('.question-card').forEach(card => {
+            card.classList.remove('correct', 'incorrect');
+        });
+        document.getElementById('score-board').style.display = 'none';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    window.onload = initQuiz;
+</script>
+
+</body>
+</html>
